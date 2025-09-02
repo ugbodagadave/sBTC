@@ -13,4 +13,13 @@ router.get('/merchant/:merchantId', WebhookController.list);
 // Delete a webhook
 router.delete('/:id', WebhookController.delete);
 
+// Get deliveries for a webhook
+router.get('/:id/deliveries', WebhookController.getDeliveries);
+
+// Retry a failed webhook delivery
+router.post('/:id/retry', WebhookController.retryDelivery);
+
+// Send a test event to a webhook
+router.post('/:id/test', WebhookController.sendTestEvent);
+
 export default router;

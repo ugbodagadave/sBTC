@@ -3,6 +3,9 @@ import { MerchantService } from '../src/services/merchantService';
 import { PaymentIntentService } from '../src/services/paymentIntentService';
 import { WebhookService } from '../src/services/webhookService';
 
+// Generate unique email for each test run
+const timestamp = Date.now();
+
 describe('Database Connection', () => {
   it('should connect to the database', async () => {
     const client = await pool.connect();
@@ -20,40 +23,40 @@ describe('Merchant Service', () => {
   it('should create and retrieve a merchant', async () => {
     // Create a merchant
     const merchant = await MerchantService.createMerchant({
-      email: 'test1@example.com',
+      email: `test1-${timestamp}@example.com`,
       password: 'password123',
       businessName: 'Test Business'
     });
     
     expect(merchant).toBeDefined();
-    expect(merchant.email).toBe('test1@example.com');
+    expect(merchant.email).toBe(`test1-${timestamp}@example.com`);
     expect(merchant.businessName).toBe('Test Business');
     
     // Retrieve the merchant by email
-    const retrievedMerchant = await MerchantService.findByEmail('test1@example.com');
+    const retrievedMerchant = await MerchantService.findByEmail(`test1-${timestamp}@example.com`);
     expect(retrievedMerchant).toBeDefined();
     expect(retrievedMerchant?.id).toBe(merchant.id);
     
     // Retrieve the merchant by ID
     const retrievedMerchantById = await MerchantService.findById(merchant.id);
     expect(retrievedMerchantById).toBeDefined();
-    expect(retrievedMerchantById?.email).toBe('test1@example.com');
+    expect(retrievedMerchantById?.email).toBe(`test1-${timestamp}@example.com`);
   });
   
   it('should validate merchant credentials', async () => {
     // Create a merchant
     await MerchantService.createMerchant({
-      email: 'test2@example.com',
+      email: `test2-${timestamp}@example.com`,
       password: 'password123',
       businessName: 'Test Business 2'
     });
     
     // Validate correct credentials
-    const isValid = await MerchantService.validateCredentials('test2@example.com', 'password123');
+    const isValid = await MerchantService.validateCredentials(`test2-${timestamp}@example.com`, 'password123');
     expect(isValid).toBe(true);
     
     // Validate incorrect credentials
-    const isInvalid = await MerchantService.validateCredentials('test2@example.com', 'wrongpassword');
+    const isInvalid = await MerchantService.validateCredentials(`test2-${timestamp}@example.com`, 'wrongpassword');
     expect(isInvalid).toBe(false);
   });
 });
@@ -64,7 +67,7 @@ describe('Payment Intent Service', () => {
   beforeAll(async () => {
     // Create a merchant for testing with a unique email
     const merchant = await MerchantService.createMerchant({
-      email: 'payment-test3@example.com',
+      email: `payment-test3-${timestamp}@example.com`,
       password: 'password123',
       businessName: 'Payment Test Business'
     });
@@ -125,7 +128,7 @@ describe('Webhook Service', () => {
   beforeAll(async () => {
     // Create a merchant for testing with a unique email
     const merchant = await MerchantService.createMerchant({
-      email: 'webhook-test4@example.com',
+      email: `webhook-test4-${timestamp}@example.com`,
       password: 'password123',
       businessName: 'Webhook Test Business'
     });
@@ -161,7 +164,7 @@ describe('Webhook Service', () => {
   it('should delete a webhook', async () => {
     // Create a merchant for the webhook to delete with a unique email
     const merchant = await MerchantService.createMerchant({
-      email: 'webhook-delete-test5@example.com',
+      email: `webhook-delete-test5-${timestamp}@example.com`,
       password: 'password123',
       businessName: 'Webhook Delete Test Business'
     });

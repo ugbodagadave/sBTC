@@ -41,6 +41,33 @@ async function initDatabase() {
       )
     `);
     
+    // Create events table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS events (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        type VARCHAR(255) NOT NULL,
+        data JSONB NOT NULL,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    
+    // Create webhook_deliveries table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS webhook_deliveries (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        webhook_id UUID REFERENCES webhooks(id) ON DELETE CASCADE,
+        event_id UUID REFERENCES events(id) ON DELETE CASCADE,
+        status VARCHAR(50) NOT NULL DEFAULT 'pending',
+        attempts INT DEFAULT 0,
+        last_attempt_at TIMESTAMP WITH TIME ZONE,
+        next_attempt_at TIMESTAMP WITH TIME ZONE,
+        response_status INT,
+        response_body TEXT,
+        error TEXT,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    
     // Create indexes for better performance
     await pool.query(`
       CREATE INDEX IF NOT EXISTS idx_payment_intents_merchant_id 
@@ -55,6 +82,26 @@ async function initDatabase() {
     await pool.query(`
       CREATE INDEX IF NOT EXISTS idx_webhooks_merchant_id 
       ON webhooks(merchant_id)
+    `);
+    
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_events_type 
+      ON events(type)
+    `);
+    
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_webhook_deliveries_webhook_id 
+      ON webhook_deliveries(webhook_id)
+    `);
+    
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_webhook_deliveries_status 
+      ON webhook_deliveries(status)
+    `);
+    
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_webhook_deliveries_next_attempt_at 
+      ON webhook_deliveries(next_attempt_at)
     `);
     
     console.log('Database initialized successfully!');

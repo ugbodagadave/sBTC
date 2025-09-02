@@ -7,6 +7,9 @@ import merchantRoutes from './routes/merchantRoutes';
 import paymentIntentRoutes from './routes/paymentIntentRoutes';
 import webhookRoutes from './routes/webhookRoutes';
 
+// Import worker
+import { webhookWorker } from './workers/webhookWorker';
+
 // Load environment variables
 dotenv.config();
 
@@ -43,8 +46,16 @@ app.get('/health', (req, res) => {
 // Only start the server if this file is run directly
 let server: any;
 if (require.main === module) {
-  server = app.listen(PORT, () => {
+  server = app.listen(PORT, async () => {
     console.log(`sBTCPay API Server is running on port ${PORT}`);
+    
+    // Start the webhook worker
+    try {
+      await webhookWorker.start();
+      console.log('Webhook worker started successfully');
+    } catch (error) {
+      console.error('Failed to start webhook worker:', error);
+    }
   });
 }
 

@@ -2,6 +2,7 @@
 import pool from '../config/db';
 import { PaymentIntent, CreatePaymentIntentInput } from '../models/PaymentIntent';
 import { v4 as uuidv4 } from 'uuid';
+import { PaymentEventService } from './paymentEventService';
 
 export class PaymentIntentService {
   /**
@@ -28,13 +29,18 @@ export class PaymentIntentService {
     const result = await pool.query(query, values);
     const row = result.rows[0];
     
-    return {
+    const paymentIntent = {
       id: row.id,
       merchantId: row.merchant_id,
       amount: parseFloat(row.amount),
       status: row.status,
       createdAt: row.created_at
     };
+    
+    // Trigger payment created event
+    await PaymentEventService.triggerPaymentCreated(paymentIntent);
+    
+    return paymentIntent;
   }
   
   /**
@@ -91,7 +97,7 @@ export class PaymentIntentService {
     }
     
     const row = result.rows[0];
-    return {
+    const paymentIntent = {
       id: row.id,
       merchantId: row.merchant_id,
       amount: parseFloat(row.amount),
@@ -100,6 +106,15 @@ export class PaymentIntentService {
       createdAt: row.created_at,
       confirmedAt: row.confirmed_at
     };
+    
+    // Trigger appropriate event based on status
+    if (status === 'succeeded') {
+      await PaymentEventService.triggerPaymentSucceeded(paymentIntent);
+    } else if (status === 'failed') {
+      await PaymentEventService.triggerPaymentFailed(paymentIntent);
+    }
+    
+    return paymentIntent;
   }
   
   /**
