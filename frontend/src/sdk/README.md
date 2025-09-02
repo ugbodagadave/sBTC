@@ -138,30 +138,7 @@ Configuration options:
 
 - `setApiKey(apiKey: string): void`
 
-## Development
-
-### Prerequisites
-
-- Node.js v18+
-- npm
-
-### Installation
-
-```bash
-npm install
-```
-
-### Building
-
-Build the SDK:
-
-```bash
-npm run build
-```
-
-This will output compiled JavaScript and TypeScript declaration files to the `dist` directory.
-
-### Testing
+## Testing
 
 Run the test suite:
 
@@ -175,24 +152,12 @@ Run tests in watch mode:
 npm run test:watch
 ```
 
-### Examples
+## Building
 
-Run the basic usage example:
-
-```bash
-npx ts-node examples/basic-usage.ts
-```
-
-Run the complete example:
+Build the SDK:
 
 ```bash
-npx ts-node examples/complete-example.ts
+npm run build
 ```
 
-## Architecture
-
-For information about the SDK architecture, see the [Architecture Documentation](ARCHITECTURE.md).
-
-## License
-
-This project is licensed under the MIT License.
+This will output compiled JavaScript and TypeScript declaration files to the `dist` directory.
