@@ -1,6 +1,7 @@
 ---
 trigger: always_on
 ---
+USE ONLY ENGLISH: BOTH IN REPLYING THE USER AND WRITING CODE
 {
   "ai_ide_development_rules": {
     "context_management": {

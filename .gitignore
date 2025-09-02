@@ -128,3 +128,6 @@ temp/
 
 # Jest
 .jest/
+
+# rules
+.qoder

@@ -1,0 +1,61 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>sBTCPay Widget Test</title><style>body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .example {
+            margin: 40px 0;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }</style><script defer="defer" src="widget.min.js"></script><script defer="defer" src="payment-links.min.js"></script></head><body><h1>sBTCPay Widget Examples</h1><div class="example"><h2>Basic Widget</h2><p>Default widget with minimal configuration:</p><div id="widget-container-1"></div></div><div class="example"><h2>Customized Widget</h2><p>Widget with custom theme and branding:</p><div id="widget-container-2"></div></div><script src="./widget.js"></script><script>// Programmatically create widgets after the DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for the widget library to be available
+            function waitForWidget(callback) {
+                if (window.SBTCPayWidget) {
+                    callback();
+                } else {
+                    setTimeout(() => waitForWidget(callback), 100);
+                }
+            }
+            
+            waitForWidget(() => {
+                // Get the widget constructor
+                const Widget = window.SBTCPayWidget;
+                
+                // Create a basic widget
+                setTimeout(() => {
+                    new Widget({
+                        apiKey: 'test_api_key',
+                        paymentIntentId: '08dce6dd-316a-4c32-b790-0fd675135673',
+                        container: '#widget-container-1'
+                    });
+                }, 100);
+                
+                // Create a customized widget
+                setTimeout(() => {
+                    new Widget({
+                        apiKey: 'test_api_key',
+                        paymentIntentId: '08dce6dd-316a-4c32-b790-0fd675135673',
+                        container: '#widget-container-2',
+                        theme: {
+                            primaryColor: '#8e44ad',
+                            backgroundColor: '#f9f9f9',
+                            textColor: '#2c3e50',
+                            fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+                            borderRadius: '12px',
+                            logoUrl: 'https://placehold.co/100x50/8e44ad/ffffff?text=Logo'
+                        }
+                    });
+                }, 200);
+            });
+        });</script></body></html>
