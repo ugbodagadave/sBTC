@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sBTCPay Simple Widget Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .example {
+            margin: 40px 0;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>sBTCPay Widget Direct Test</h1>
+    
+    <div class="example">
+        <h2>Basic Widget</h2>
+        <p>Default widget with minimal configuration:</p>
+        <div id="widget-container"></div>
+    </div>
+    
+    <script>
+        // Define the widget class directly in the page for testing
+        class SBTCPayWidget {
+            constructor(options = {}) {
+                this.options = {
+                    apiKey: options.apiKey || null,
+                    paymentIntentId: options.paymentIntentId || null,
+                    container: options.container || null,
+                    theme: {
+                        primaryColor: options.theme?.primaryColor || '#3498db',
+                        backgroundColor: options.theme?.backgroundColor || '#ffffff',
+                        textColor: options.theme?.textColor || '#333333',
+                    }
+                };
+                
+                this.container = null;
+                this.render();
+            }
+            
+            render() {
+                // Create widget container
+                this.container = document.createElement('div');
+                this.container.className = 'sbtcpay-widget';
+                this.container.style.border = '1px solid #ccc';
+                this.container.style.borderRadius = '8px';
+                this.container.style.padding = '20px';
+                this.container.style.backgroundColor = this.options.theme.backgroundColor;
+                this.container.style.color = this.options.theme.textColor;
+                
+                this.container.innerHTML = `
+                    <div class="sbtcpay-widget-header">
+                        <h3 style="margin-top: 0;">Complete Your Payment</h3>
+                    </div>
+                    <div class="sbtcpay-widget-body">
+                        <div class="sbtcpay-widget-amount" style="margin-bottom: 15px;">
+                            <strong>Amount:</strong>
+                            <span>0.01 sBTC</span>
+                        </div>
+                        <div class="sbtcpay-wallet-buttons" style="display: flex; flex-direction: column; gap: 10px;">
+                            <button style="
+                                background-color: ${this.options.theme.primaryColor}; 
+                                color: white; 
+                                border: none; 
+                                padding: 10px; 
+                                border-radius: 4px; 
+                                cursor: pointer;
+                            ">Connect Leather Wallet</button>
+                            <button style="
+                                background-color: ${this.options.theme.primaryColor}; 
+                                color: white; 
+                                border: none; 
+                                padding: 10px; 
+                                border-radius: 4px; 
+                                cursor: pointer;
+                            ">Connect Xverse Wallet</button>
+                        </div>
+                    </div>
+                `;
+                
+                // If we have a target element, insert the widget there
+                if (this.options.container) {
+                    const target = document.querySelector(this.options.container);
+                    if (target) {
+                        target.appendChild(this.container);
+                    }
+                } else {
+                    // If no container specified, append to body
+                    document.body.appendChild(this.container);
+                }
+            }
+        }
+        
+        // Initialize the widget when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            new SBTCPayWidget({
+                apiKey: 'test_api_key',
+                paymentIntentId: 'test-payment-intent',
+                container: '#widget-container',
+                theme: {
+                    primaryColor: '#8e44ad',
+                    backgroundColor: '#f9f9f9',
+                    textColor: '#2c3e50'
+                }
+            });
+            
+            console.log('Widget initialized directly!');
+        });
+    </script>
+</body>
+</html>

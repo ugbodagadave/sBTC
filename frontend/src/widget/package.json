@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@stacks/connect": "^8.1.9",
+    "@walletconnect/ethereum-provider": "^2.11.0",
     "qrcode": "^1.5.4",
     "sats-connect": "^3.6.1"
   }

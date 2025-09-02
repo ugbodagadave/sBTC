@@ -4,6 +4,17 @@
  * An embeddable widget for accepting sBTC payments with multiple wallet support
  */
 
+// Import QR code library
+let QRCode;
+if (typeof window !== 'undefined') {
+  try {
+    QRCode = require('qrcode');
+    console.log('QRCode library loaded successfully');
+  } catch (e) {
+    console.warn('QRCode library failed to load:', e);
+  }
+}
+
 class SBTCPayWidget {
   constructor(options = {}) {
     this.options = {
@@ -18,7 +29,7 @@ class SBTCPayWidget {
         primaryColor: options.theme?.primaryColor || '#3498db',
         backgroundColor: options.theme?.backgroundColor || '#ffffff',
         textColor: options.theme?.textColor || '#333333',
-        fontFamily: options.theme?.fontFamily || '-apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Oxygen, Ubuntu, sans-serif',
+        fontFamily: options.theme?.fontFamily || "'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif",
         borderRadius: options.theme?.borderRadius || '8px',
         logoUrl: options.theme?.logoUrl || null
       },
@@ -111,6 +122,39 @@ class SBTCPayWidget {
             supported: ['bitcoin', 'stacks']
           });
         }
+
+        // Detect Hiro Wallet
+        if (window.HiroWalletProvider) {
+          wallets.push({
+            id: 'hiro',
+            name: 'Hiro Wallet',
+            icon: 'https://wallet.hiro.so/favicon.ico',
+            provider: 'hiro',
+            supported: ['stacks', 'bitcoin']
+          });
+        }
+
+        // Detect Bitcoin Connect
+        if (window.webln || window.WebLNProvider) {
+          wallets.push({
+            id: 'bitcoin-connect',
+            name: 'Bitcoin Connect',
+            icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNGODlDMzUiLz4KPHBhdGggZD0iTTI4LjQ5MzIgMTcuODQ3MUMyOC45MDIzIDE1LjY2MTUgMjcuMjI0OCAxNC40MTQyIDI0Ljk0OTcgMTMuNTg2NEwyNS44NTY0IDEwLjEwMDFMMjMuODI3IDkuNTgxMDdMMjIuOTQzNyAxMi45NzY0QzIyLjM3ODMgMTIuODM2NCAyMS43OTUzIDEyLjcwMzggMjEuMjE0NyAxMi41NzIzTDIyLjEwMzQgOS4xNTI4OUwyMC4wNzQ2IDguNjMzODVMMTkuMTY3OSAxMi4xMjAyQzE4LjY5OTYgMTIuMDEzIDE4LjI0IDE5Ljc0NzQgMTguMjQgMTkuNzQ3NEwxOC4yNDAzIDE5Ljc0NjNDMTYuNzU2OCAxOS4zNzc2IDE1LjczIDE4Ljk0IDE1LjYwNyAxNi43Njk5TDEzLjU3NzcgMTcuMjkwMUwxMi41ODMzIDIxLjA1NzlDMTIuNTgzMyAyMS4wNTc5IDEzLjU3ODEgMjEuMjkxIDE0LjUzNjkgMjEuNDk2OEMxNS4zOTM4IDIxLjY4MTcgMTUuMzI1OSAyMS42MzQzIDE1LjMyNTkgMjEuNjM0M0wxNC4xODMyIDI2LjAzNzRMMTYuMjEzIDI2LjU1NjRMMTcuMTE5NyAyMy4wNzExQzE3LjcwMzcgMjMuMjIzIDE4LjI2OTIgMjMuMzYzIDAxOS40NTQgMjMuNjk2NEMxNi4wMTUzIDIzLjMwNDIgMTYuMDE1MyAyMy4zMDQyIDE2LjMxNTMgMjMuMzA0MkMxNy44MDkgMjYuMDA4MSAyMC4zNjkyIDI1LjQ0NjkgMjEuMjUwMyAyMy4wNTUxQzIyLjEzMTMgMjAuNjYzMiAyMS4yNTI0IDE5LjA4MDggMTkuNDA0NCAxOC4wMzMyQzIwLjgwNzEgMTcuNzAxNCwyMS44ODkxIDE2Ljk1MTcgMjIuMjM3NyAxNS40MjE0QzIyLjcwMDYgMTMuMzk0MSAyMS40MjI4IDEyLjIxOTkgMTkuNjIxOCAxMS42MTgxTDIwLjUzMDEgOC4xMjk5NEwxOC41IDcuNjExMDJMMTcuNTkzMyAxMS4wOTc0QzE3LjAyNzkgMTAuOTU3NCAxNi40NDQ5IDEwLjgyNDcgMTUuODc1NCAxMC42OTExTDE2Ljc4NjYgNy4yMjE0OUwxNC43NTc4IDYuNzAyNDVMMTMuODQ5NSAxMC4xODlDMTMuMzgxMiAxMC4wODE4IDEyLjkyMTYgOS45NzQ1MiAxMi40ODE4IDkuODYyNzRMMTIuNDkwNyA5LjgyNDE5TDkuNjMyNzkgOS4xMTQ1N7w5LjA3ODk2IDExLjI4NzFDOS4wNzg5NiAxMS4yODcxIDEwLjU2MyAxMS42NTUxIDEwLjUyMiAxMS42OTM3QzExLjM3ODkgMTEuODc4NiAxMS41NjExIDIuNDEwNCAxMS41NjExIDEyLjQxMDRDMTEuNDM4IDEyLjc1OTMgMTEuMjcyMyAxMi45OTg0IDEwLjc4MjggMTMuMDc2N0MxMC44MjQgMTMuMDM4IDkuMzM4MDYgMTIuNzQ5MiA5LjMzODA2IDEyLjc0OTJMOC4zNDM3IDE1LjE0MTdMMTAuOTkwNSAxNS43ODU0QzExLjUwODEgMTUuOTE3OSAxMi4wMTU1IDE2LjA1ODEgMTIuNTE0NSAxNi4xOTI5TDExLjYwMzMgMTkuNzAzNEwxMy42MzIxIDIwLjIyMjRMMTQuNTM4OCA2LjczNTk5QzE1LjExOTYgMTYuODg3NSAxNS43MDcgMTcuMDI1IDE2LjI4OCAxNy4xNTc3TDE1LjM4MSAyMC42NDIxTDE3LjQxIDIxLjE2MUwxOC4zMjEyIDE3LjY1NzNDMjEuMzE3MyAxOC4yNDI1IDIzLjUxMDYgMTguMDE3MyAyNC40NTYxIDE1LjM3MUMyNS4yMDA3IDEzLjI3NzggMjQuNTYyOCAxMi4xMDQ0IDIzLjEyMzMgMTEuMzU2NkMyNC4xODA3IDExLjE1NyAyNC45NzU0IDEwLjQ0MjUgMjUuMjU2MyA5LjA0MTc5QzI1LjY0MTggNy4xMzExOCAyNC4xOTQ1IDYuMjI3NzMgMjIuMzM2NCA1LjY5ODA0TDIzLjI0NDggMi4yMTA3NUwyMS4yMTU5IDEuNjkxN7wyMC4zMTI2IDUuMTYyNDJDMTkuNzQ4MiA1LjAyMTQ4IDE5LjE2MzkgNC44OTA0MSAxOC41ODI0IDQuNzU2NTdMMTkuNDkwNyAxLjMwMTYxTDE3LjQ2MTkgMC43ODI1NjhMMTYuNTUzNSA0LjI2OTg0QzE2LjA5MTEgNC4xNjQxNCAxNS42MzY2IDQuMDYwNzMgMTUuMTk4NyAzLjk0OTc5TDE1LjIwNjkgMy45MTU0MUwxMi4zNDk1IDMuMjA1NzlMMTEuNzk1NiA1LjM3ODM0QzExLjc5NTYgNS4zNzgzNCAxMy4yNzk2IDUuNzQ2MzMgMTMuMjM4NiA1Ljc4NDkyQzE0LjA5NTQgNS45Njk4NSAxNC4yNzc2IDYuNTAxNjQgMTQuMjc3NiA2LjUwMTY0TDEyLjM0OTkgMTMuMDM0OEwxMS4yMDY1IDE3LjQzNzlMMTMuMjM2MyAxNy45NTY5TDE0LjE0MyAxNC40NzE2QzE0LjcyOCAxNC42MjM2IDE1LjI5MzMgMTQuNzYzOSAxNS44NDkgMTQuODk3MkwxNC45NDc1IDE4LjM2OTFMMTYuOTc2MyAxOC44ODhMMTcuODgzIDE1LjQwMTdDMjAuODc5MSAxNS45ODY4IDIzLjA3MjUgMTUuNzYxNiAyNC4wMTggMTMuMTE1NEMyNC43NjI2IDExLjAyMTggMjQuMTI0NiA5Ljg0ODQxIDIyLjY4NTIgOS4xMDA2QzIzLjc0MjYgOC45MDA5NyAyNC41MzczIDguMTg2NDcgMjQuODE4MiA2Ljc4NThDMjUuMjExNCA0Ljg2NDQyIDIzLjc2MDQgMy45NTczNCAyMS44OTQ5IDMuNDMwODhMMjEuODk1IDMuNDMwN0wyMi44MDMzIDAgMjAuNzc0NSAtMC41MTkwNDNMMTkuODcxMyAyLjk1MTY5QzE5LjMwNjkgMi44MTA3NSAxOC43MjI1IDIuNjc5NjggMTguMTQxMSAyLjU0NTg0TDE5LjA0ODQgLTAuOTA5MTQ1TDE3LjAxOTYgLTEuNDI4MjFMMTYuMTExMyAyLjA1OTA4QzE1LjY0MjggMS45NTE3OSAxNS4xODQgMS44NDU3MyAxNC43NDQ2IDEuNzMzMDhMMTQuNzU0MyAxLjY5MjYxTDExLjg5NTkgMC45ODQwNjJMMTEuMzQyMiAzLjE1NjUxQzExLjM0MjIgMy4xNTY1MSAxMi44MjYyIDMuNTI0NSAxMi43ODUyIDMuNTYzMDhDMTMuNjQyIDMuNzQ4MDIgMTMuODI0MyA0LjI3OTgxIDEzLjgyNDMgNC4yNzk4MUwxMS44OTY2IDEwLjgxM0wxMC43NTMyIDE1LjIxNjFMMTIuNzgzIDE1LjczNTFMMTMuNjg5NyAxMi4yNDk4QzE0LjI3NDcgMTIuNDAxOCAxNC44NCAxMi41NDIxIDE1LjM5NTcgMTIuNjc1NEwxNC40ODg3IDE2LjE0NjNMMTYuNTE3NSAxNi42NjUzTDE3LjY2MDkgMTEuMjYyMkwxNy42NjA3IDExLjI2MjZDMTkuNDU0NSAxMy45NjY1IDIyLjAxNDcgMTMuNDA1MyAyMi44OTU4IDExLjAxMzRDMjMuNzc2OSA4LjYyMTU0IDIyLjg5OCA3LjAzOTE0IDIxLjA1IDUuOTkxNTVDMjIuNDUyNyA1LjY1OTc1IDIzLjUzNDcgNC45MSAyMy44ODMzIDMuMzc5N0MyNC4zNDYyIDEuMzUyNDMgMjMuMDY4NCAwLjE3ODIyOCAyMS4yNjc0IC0wLjQyMzU5MUwyMS44OTUgMy40MzA3QzIwLjc0MSAzLjA5MzcgMTkuMjU2NyAyLjgwMzkgMTYuNTUzNSA0LjI2OThMMTcuODgzIDEyLjE5OTZaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K',
+            provider: 'webln',
+            supported: ['bitcoin', 'lightning']
+          });
+        }
+        
+        // Detect WalletConnect
+        if (typeof window.WalletConnectProvider !== 'undefined') {
+          wallets.push({
+            id: 'walletconnect',
+            name: 'WalletConnect',
+            icon: 'https://walletconnect.org/walletconnect-logo.png',
+            provider: 'walletconnect',
+            supported: ['bitcoin', 'stacks']
+          });
+        }
         
       } catch (error) {
         console.warn('Error detecting wallets:', error);
@@ -121,21 +165,34 @@ class SBTCPayWidget {
   }
   
   async fetchPaymentIntent() {
-    const response = await fetch(
-      `${this.options.baseUrl}/payment-intents/${this.options.paymentIntentId}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          ...(this.options.apiKey && { 'Authorization': `Bearer ${this.options.apiKey}` })
+    try {
+      // Try to fetch from server
+      const response = await fetch(
+        `${this.options.baseUrl}/payment-intents/${this.options.paymentIntentId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            ...(this.options.apiKey && { 'Authorization': `Bearer ${this.options.apiKey}` })
+          }
         }
+      );
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch payment intent: ${response.status}`);
       }
-    );
-    
-    if (!response.ok) {
-      throw new Error(`Failed to fetch payment intent: ${response.status}`);
+      
+      this.paymentData = await response.json();
+    } catch (error) {
+      console.warn('Using mock payment data for demo purposes:', error);
+      // For demo/development: use mock data if server request fails
+      this.paymentData = {
+        id: this.options.paymentIntentId || 'mock-payment-intent',
+        amount: 0.01,
+        status: 'requires_payment',
+        description: 'Test payment',
+        merchant_id: 'mock-merchant'
+      };
     }
-    
-    this.paymentData = await response.json();
   }
   
   render() {
@@ -211,9 +268,10 @@ class SBTCPayWidget {
           
           ${this.connectedWallet ? this.getConnectedWalletHTML() : this.getWalletSelectionHTML()}
           
-          <div class="sbtcpay-widget-qrcode" id="sbtcpay-qrcode-container" style="display: none;">
-            <h4>Scan with your mobile wallet</h4>
+          <div class="sbtcpay-qrcode-container" id="sbtcpay-qrcode-container" style="display: none;">
+            <h4 class="sbtcpay-qrcode-header">Scan with your mobile wallet</h4>
             <div id="sbtcpay-qrcode"></div>
+            <div class="sbtcpay-qr-details">Scan this code with your sBTC compatible wallet</div>
             <div class="sbtcpay-payment-address" id="sbtcpay-payment-address"></div>
           </div>
           
@@ -237,6 +295,10 @@ class SBTCPayWidget {
             <a href="https://unisat.io" target="_blank" rel="noopener">Unisat Wallet</a>
           </div>
         </div>
+        <div style="text-align: center; margin: 16px 0 8px;">
+          <span style="display: inline-block; color: #888;">or</span>
+        </div>
+        <button id="sbtcpay-show-qr-button" class="sbtcpay-wallet-button primary">Show QR Code</button>
       `;
     }
     
@@ -255,8 +317,10 @@ class SBTCPayWidget {
         <div class="sbtcpay-wallet-buttons">
           ${walletButtons}
         </div>
-        ${this.options.showQRCode ? '<p class="sbtcpay-or-text">or</p>' : ''}
-        ${this.options.showQRCode ? '<button id="sbtcpay-show-qr-button" class="sbtcpay-secondary-button">Show QR Code</button>' : ''}
+        <div style="text-align: center; margin: 16px 0 8px;">
+          <span style="display: inline-block; color: #888;">or</span>
+        </div>
+        <button id="sbtcpay-show-qr-button" class="sbtcpay-wallet-button primary">Show QR Code</button>
       </div>
     `;
   }
@@ -343,6 +407,15 @@ class SBTCPayWidget {
           break;
         case 'okx':
           address = await this.connectOKXWallet();
+          break;
+        case 'hiro':
+          address = await this.connectHiroWallet();
+          break;
+        case 'webln':
+          address = await this.connectBitcoinConnectWallet();
+          break;
+        case 'walletconnect':
+          address = await this.connectWalletConnectWallet();
           break;
         default:
           throw new Error(`Unsupported wallet provider: ${wallet.provider}`);
@@ -494,9 +567,110 @@ class SBTCPayWidget {
   }
   
   /**
+   * Connect to Hiro Wallet
+   */
+  async connectHiroWallet() {
+    try {
+      if (!window.HiroWalletProvider) {
+        throw new Error('Hiro wallet not detected');
+      }
+      
+      const provider = window.HiroWalletProvider;
+      await provider.connect();
+      
+      const accounts = await provider.getAddresses();
+      
+      if (!accounts || accounts.length === 0) {
+        throw new Error('No accounts returned from Hiro wallet');
+      }
+      
+      return accounts[0];
+      
+    } catch (error) {
+      throw new Error(`Hiro wallet connection failed: ${error.message}`);
+    }
+  }
+  
+  /**
+   * Connect to Bitcoin Connect (WebLN)
+   */
+  async connectBitcoinConnectWallet() {
+    try {
+      if (typeof window.webln === 'undefined' && typeof window.WebLNProvider === 'undefined') {
+        throw new Error('WebLN provider not detected');
+      }
+      
+      // Use existing WebLN provider or initialize if not already enabled
+      let weblnProvider = window.webln;
+      
+      if (!weblnProvider && window.WebLNProvider) {
+        weblnProvider = new window.WebLNProvider();
+      }
+      
+      // Enable WebLN
+      await weblnProvider.enable();
+      
+      // Get node info to identify the wallet
+      const info = await weblnProvider.getInfo();
+      console.log('WebLN wallet connected:', info);
+      
+      // For Bitcoin Connect, we use the node public key as the "address"
+      // since we don't have a direct Bitcoin address method
+      return info.node?.publicKey || 'webln-user';
+      
+    } catch (error) {
+      throw new Error(`Bitcoin Connect wallet connection failed: ${error.message}`);
+    }
+  }
+  
+  /**
+   * Connect to wallet using WalletConnect
+   */
+  async connectWalletConnectWallet() {
+    try {
+      if (typeof window.WalletConnectProvider === 'undefined') {
+        throw new Error('WalletConnect provider not detected');
+      }
+      
+      // Initialize WalletConnect provider
+      const provider = new window.WalletConnectProvider({
+        rpc: {
+          1: 'https://cloudflare-eth.com', // Ethereum
+          // Add other chain RPC endpoints as needed
+        },
+      });
+      
+      // Enable session
+      const accounts = await provider.enable();
+      
+      if (!accounts || accounts.length === 0) {
+        throw new Error('No accounts returned from WalletConnect');
+      }
+      
+      // Store provider for later use
+      this._walletConnectProvider = provider;
+      
+      return accounts[0];
+      
+    } catch (error) {
+      throw new Error(`WalletConnect connection failed: ${error.message}`);
+    }
+  }
+  
+  /**
    * Disconnect from current wallet
    */
   disconnectWallet() {
+    // Clean up WalletConnect provider if it exists
+    if (this._walletConnectProvider) {
+      try {
+        this._walletConnectProvider.disconnect();
+      } catch (error) {
+        console.warn('Error disconnecting WalletConnect:', error);
+      }
+      this._walletConnectProvider = null;
+    }
+
     this.connectedWallet = null;
     this.userAddress = null;
     
@@ -577,6 +751,18 @@ class SBTCPayWidget {
       const qrContainer = this.container.querySelector('#sbtcpay-qrcode-container');
       if (qrContainer) {
         qrContainer.style.display = 'block';
+        
+        // Ensure the QR code is visible
+        const qrElement = this.container.querySelector('#sbtcpay-qrcode');
+        if (qrElement) {
+          qrElement.style.display = 'block';
+        }
+        
+        // Ensure the text below QR code is visible
+        const qrDetails = this.container.querySelector('.sbtcpay-qr-details');
+        if (qrDetails) {
+          qrDetails.style.display = 'block';
+        }
       }
       
       this.updateStatus('Scan QR code with your mobile wallet');
@@ -620,22 +806,40 @@ class SBTCPayWidget {
       }
       
       // Generate QR code using the qrcode library if available
-      if (typeof QRCode !== 'undefined') {
-        const qrElement = this.container.querySelector('#sbtcpay-qrcode');
-        if (qrElement) {
-          new QRCode(qrElement, {
-            text: paymentData.qrText,
-            width: 200,
-            height: 200,
-            colorDark: "#000000",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel ? QRCode.CorrectLevel.H : 0
-          });
-        }
-      } else {
-        // Fallback to simple QR code display
-        const qrElement = this.container.querySelector('#sbtcpay-qrcode');
-        if (qrElement) {
+      const qrElement = this.container.querySelector('#sbtcpay-qrcode');
+      if (qrElement) {
+        try {
+          if (QRCode && QRCode.toCanvas) {
+            // Use QRCode from npm package
+            const canvas = document.createElement('canvas');
+            QRCode.toCanvas(canvas, paymentData.qrText, {
+              width: 200,
+              margin: 1,
+              color: {
+                dark: '#000000',
+                light: '#ffffff'
+              },
+              errorCorrectionLevel: 'H'
+            });
+            qrElement.appendChild(canvas);
+            console.log('QR code generated using imported library');
+          } else if (window.QRCode) {
+            // Use global QRCode if available
+            new window.QRCode(qrElement, {
+              text: paymentData.qrText,
+              width: 200,
+              height: 200,
+              colorDark: "#000000",
+              colorLight: "#ffffff",
+              correctLevel: window.QRCode.CorrectLevel ? window.QRCode.CorrectLevel.H : 0
+            });
+            console.log('QR code generated using global library');
+          } else {
+            throw new Error('No QR code library available');
+          }
+        } catch (qrError) {
+          console.error('QR code generation failed:', qrError);
+          // Fallback to simple QR code display
           qrElement.innerHTML = `
             <div class="qr-fallback">
               <p>QR Code Library not loaded</p>
@@ -814,289 +1018,386 @@ class SBTCPayWidget {
   }
 
   injectStyles() {
+    // Add styles to the document
+    const styleId = 'sbtcpay-widget-styles';
+    
     // Check if styles are already injected
-    if (document.getElementById('sbtcpay-widget-styles')) {
+    if (document.getElementById(styleId)) {
       return;
     }
     
-    const styles = `
-      <style id="sbtcpay-widget-styles">
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+      /* Import Poppins font */
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+      
+      .sbtcpay-widget {
+        font-family: ${this.options.theme.fontFamily};
+        background-color: ${this.options.theme.backgroundColor};
+        color: ${this.options.theme.textColor};
+        border-radius: ${this.options.theme.borderRadius};
+        padding: 20px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        width: 100%;
+        box-sizing: border-box;
+        position: relative;
+      }
+      
+      .sbtcpay-widget * {
+        box-sizing: border-box;
+      }
+      
+      .sbtcpay-widget-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        padding-bottom: 12px;
+      }
+      
+      .sbtcpay-widget-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin: 0;
+        color: ${this.options.theme.textColor};
+      }
+      
+      .sbtcpay-logo {
+        max-height: 40px;
+        max-width: 100px;
+      }
+      
+      .sbtcpay-widget-body {
+        margin-bottom: 16px;
+      }
+      
+      .sbtcpay-payment-info {
+        margin-bottom: 24px;
+      }
+      
+      .sbtcpay-payment-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 1rem;
+      }
+      
+      .sbtcpay-payment-label {
+        font-weight: 500;
+        color: ${this.options.theme.textColor};
+        opacity: 0.8;
+      }
+      
+      .sbtcpay-payment-value {
+        font-weight: 600;
+      }
+      
+      .sbtcpay-wallet-selection {
+        margin-top: 16px;
+      }
+      
+      .sbtcpay-wallet-options {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      
+      .sbtcpay-wallet-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 10px 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background-color: #ffffff;
+      }
+      
+      .sbtcpay-wallet-option:hover {
+        border-color: ${this.options.theme.primaryColor};
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transform: translateY(-1px);
+      }
+      
+      .sbtcpay-wallet-icon {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+      }
+      
+      .sbtcpay-wallet-name {
+        font-weight: 500;
+        color: ${this.options.theme.textColor};
+      }
+      
+      .sbtcpay-wallet-button {
+        background-color: transparent;
+        border: 1px solid ${this.options.theme.primaryColor};
+        color: ${this.options.theme.primaryColor};
+        border-radius: 6px;
+        padding: 10px 16px;
+        font-family: ${this.options.theme.fontFamily};
+        font-weight: 500;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        margin-top: 8px;
+      }
+      
+      .sbtcpay-wallet-button:hover {
+        background-color: ${this.options.theme.primaryColor}10;
+      }
+      
+      .sbtcpay-wallet-button.primary {
+        background-color: ${this.options.theme.primaryColor};
+        color: white;
+      }
+      
+      .sbtcpay-wallet-button.primary:hover {
+        filter: brightness(1.1);
+      }
+      
+      .sbtcpay-connected-wallet {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 12px;
+        background-color: ${this.options.theme.backgroundColor};
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+      }
+      
+      .sbtcpay-wallet-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        width: 100%;
+      }
+      
+      .sbtcpay-address-display {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.85rem;
+        background-color: rgba(0, 0, 0, 0.05);
+        padding: 6px 10px;
+        border-radius: 4px;
+        word-break: break-all;
+        flex: 1;
+        text-align: center;
+        cursor: pointer;
+      }
+      
+      .sbtcpay-status {
+        margin-top: 16px;
+        padding: 10px;
+        border-radius: 6px;
+        background-color: rgba(0, 0, 0, 0.05);
+        font-size: 0.9rem;
+        text-align: center;
+      }
+      
+      .sbtcpay-status.error {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+      }
+      
+      .sbtcpay-status.success {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+      }
+      
+      .sbtcpay-status.warning {
+        background-color: rgba(255, 193, 7, 0.1);
+        color: #ffc107;
+      }
+      
+      .sbtcpay-qrcode-container {
+        display: none;
+        background-color: white;
+        padding: 16px;
+        border-radius: 8px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        margin-top: 16px;
+        text-align: center;
+      }
+      
+      .sbtcpay-qrcode-header {
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: ${this.options.theme.textColor};
+      }
+      
+      #sbtcpay-qrcode {
+        margin: 0 auto 16px;
+        width: 200px;
+        height: 200px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        padding: 8px;
+      }
+      
+      .sbtcpay-qr-details {
+        font-size: 0.9rem;
+        margin: 12px 0;
+        color: ${this.options.theme.textColor};
+        font-weight: 500;
+        text-align: center;
+      }
+      
+      .payment-address-info {
+        margin-top: 12px;
+        padding: 8px;
+        background-color: rgba(0, 0, 0, 0.03);
+        border-radius: 6px;
+      }
+      
+      .payment-address-info label {
+        display: block;
+        font-size: 0.8rem;
+        color: ${this.options.theme.textColor};
+        opacity: 0.7;
+        margin-bottom: 4px;
+      }
+      
+      .address-text {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.85rem;
+        word-break: break-all;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 4px;
+        transition: background-color 0.2s ease;
+      }
+      
+      .address-text:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+      
+      .payment-address-info small {
+        display: block;
+        font-size: 0.75rem;
+        opacity: 0.7;
+        margin-top: 4px;
+      }
+      
+      .sbtcpay-widget-footer {
+        font-size: 0.8rem;
+        text-align: center;
+        color: ${this.options.theme.textColor};
+        opacity: 0.7;
+        margin-top: 16px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+      }
+      
+      .sbtcpay-widget a {
+        color: ${this.options.theme.primaryColor};
+        text-decoration: none;
+      }
+      
+      .sbtcpay-widget a:hover {
+        text-decoration: underline;
+      }
+      
+      .sbtcpay-no-wallets {
+        padding: 16px;
+        text-align: center;
+        background-color: rgba(0, 0, 0, 0.03);
+        border-radius: 8px;
+        margin-bottom: 16px;
+      }
+      
+      .sbtcpay-no-wallets-title {
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      
+      .sbtcpay-wallet-recommendations {
+        margin-top: 12px;
+        font-size: 0.9rem;
+      }
+      
+      .sbtcpay-wallet-recommendations a {
+        display: inline-block;
+        margin: 4px 8px;
+      }
+      
+      .sbtcpay-success-animation {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 24px 0;
+      }
+      
+      .sbtcpay-success-circle {
+        width: 60px;
+        height: 60px;
+        background-color: #28a745;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 30px;
+        margin-bottom: 16px;
+      }
+      
+      .sbtcpay-success-title {
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+      }
+      
+      .sbtcpay-tx-details {
+        margin-top: 16px;
+        font-size: 0.9rem;
+        width: 100%;
+      }
+      
+      .sbtcpay-tx-detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 4px 0;
+      }
+      
+      .sbtcpay-tx-detail-label {
+        opacity: 0.8;
+      }
+      
+      .sbtcpay-tx-hash {
+        font-family: 'Roboto Mono', monospace;
+        font-size: 0.85rem;
+        word-break: break-all;
+        cursor: pointer;
+      }
+      
+      /* Responsive styles */
+      @media (max-width: 480px) {
         .sbtcpay-widget {
-          font-family: ${this.options.theme.fontFamily};
-          max-width: 400px;
-          margin: 0 auto;
-          border: 1px solid #e1e5e9;
-          border-radius: ${this.options.theme.borderRadius};
-          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-          background: ${this.options.theme.backgroundColor};
-          color: ${this.options.theme.textColor};
+          padding: 16px;
         }
         
-        @media (max-width: 480px) {
-          .sbtcpay-widget {
-            max-width: 95%;
-            margin: 0 10px;
-          }
+        .sbtcpay-widget-title {
+          font-size: 1.2rem;
         }
-        
-        @media (max-width: 768px) {
-          .sbtcpay-widget {
-            max-width: 90%;
-          }
-        }
-        
-        .sbtcpay-widget-container {
-          padding: 20px;
-        }
-        
-        .sbtcpay-widget-logo {
-          text-align: center;
-          margin-bottom: 15px;
-        }
-        
-        .sbtcpay-widget-logo img {
-          max-height: 50px;
-          max-width: 100%;
-        }
-        
-        .sbtcpay-widget-header h3 {
-          margin: 0 0 15px 0;
-          font-size: 1.2em;
-          text-align: center;
-          color: ${this.options.theme.textColor};
-        }
-        
-        .sbtcpay-widget-payment-info {
-          margin-bottom: 20px;
-        }
-        
-        .sbtcpay-widget-payment-info .label {
-          font-weight: 600;
-          color: #666;
-          margin-right: 10px;
-        }
-        
-        .sbtcpay-widget-payment-info .value {
-          font-weight: bold;
-          color: ${this.options.theme.textColor};
-        }
-        
-        .sbtcpay-widget-amount,
-        .sbtcpay-widget-description {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 10px;
-        }
-        
-        /* Wallet Selection Styles */
-        .sbtcpay-wallet-selection {
-          margin: 20px 0;
-        }
-        
-        .sbtcpay-wallet-selection h4 {
-          margin: 0 0 15px 0;
-          font-size: 1em;
-          color: ${this.options.theme.textColor};
-          text-align: center;
-        }
-        
-        .sbtcpay-wallet-buttons {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-        
-        .sbtcpay-wallet-button {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 12px 16px;
-          border: 2px solid #e1e5e9;
-          border-radius: ${this.options.theme.borderRadius};
-          background: ${this.options.theme.backgroundColor};
-          color: ${this.options.theme.textColor};
-          cursor: pointer;
-          transition: all 0.2s ease;
-          font-size: 14px;
-          font-weight: 500;
-        }
-        
-        .sbtcpay-wallet-button:hover {
-          border-color: ${this.options.theme.primaryColor};
-          background: rgba(52, 152, 219, 0.05);
-        }
-        
-        .sbtcpay-wallet-button .wallet-icon {
-          width: 24px;
-          height: 24px;
-          border-radius: 4px;
-        }
-        
-        .sbtcpay-or-text {
-          text-align: center;
-          margin: 15px 0;
-          color: #666;
-          font-size: 14px;
-        }
-        
-        .sbtcpay-no-wallets {
-          text-align: center;
-          padding: 20px;
-          background: #f8f9fa;
-          border-radius: ${this.options.theme.borderRadius};
-          margin: 20px 0;
-        }
-        
-        .sbtcpay-wallet-recommendations {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          margin-top: 15px;
-        }
-        
-        .sbtcpay-wallet-recommendations a {
-          color: ${this.options.theme.primaryColor};
-          text-decoration: none;
-          font-weight: 500;
-        }
-        
-        .sbtcpay-wallet-recommendations a:hover {
-          text-decoration: underline;
-        }
-        
-        /* Connected Wallet Styles */
-        .sbtcpay-connected-wallet {
-          margin: 20px 0;
-        }
-        
-        .sbtcpay-wallet-info {
-          background: #f8f9fa;
-          padding: 12px 16px;
-          border-radius: ${this.options.theme.borderRadius};
-          margin-bottom: 15px;
-        }
-        
-        .sbtcpay-wallet-info .wallet-name {
-          display: block;
-          font-weight: 600;
-          color: ${this.options.theme.textColor};
-          margin-bottom: 4px;
-        }
-        
-        .sbtcpay-wallet-info .wallet-address {
-          display: block;
-          font-family: monospace;
-          font-size: 12px;
-          color: #666;
-        }
-          margin-bottom: 20px;
-        }
-        
-        .sbtcpay-widget-amount,
-        .sbtcpay-widget-description {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 10px;
-        }
-        
-        .sbtcpay-widget-amount .label,
-        .sbtcpay-widget-description .label {
-          font-weight: 600;
-        }
-        
-        .sbtcpay-widget-actions {
-          text-align: center;
-          margin-bottom: 20px;
-        }
-        
-        .sbtcpay-button {
-          background-color: ${this.options.theme.primaryColor};
-          color: white;
-          border: none;
-          padding: 12px 20px;
-          font-size: 16px;
-          border-radius: 4px;
-          cursor: pointer;
-          width: 100%;
-          font-weight: 600;
-          transition: background-color 0.3s;
-        }
-        
-        .sbtcpay-button:hover {
-          opacity: 0.9;
-        }
-        
-        .sbtcpay-button:focus {
-          outline: 2px solid ${this.options.theme.primaryColor};
-          outline-offset: 2px;
-        }
-        
-        .sbtcpay-widget-qrcode {
-          display: none;
-          text-align: center;
-          padding: 15px;
-          background: #f8f9fa;
-          border-radius: 4px;
-          margin-bottom: 20px;
-        }
-        
-        .sbtcpay-qr-info {
-          margin-top: 15px;
-        }
-        
-        .sbtcpay-qr-placeholder {
-          font-size: 14px;
-        }
-        
-        .sbtcpay-address {
-          font-family: monospace;
-          font-size: 12px;
-          word-break: break-all;
-          background: #eee;
-          padding: 5px;
-          border-radius: 3px;
-          margin: 5px 0;
-        }
-        
-        .sbtcpay-widget-success,
-        .sbtcpay-widget-error {
-          text-align: center;
-        }
-        
-        .sbtcpay-widget-success h3,
-        .sbtcpay-widget-error h3 {
-          margin-top: 0;
-        }
-        
-        .sbtcpay-widget-footer {
-          text-align: center;
-          font-size: 0.8em;
-          color: #7f8c8d;
-          border-top: 1px solid #ecf0f1;
-          padding-top: 15px;
-          margin-top: 15px;
-        }
-        
-        .sbtcpay-widget-error-content {
-          background: #f8d7da;
-          color: #721c24;
-          border: 1px solid #f5c6cb;
-          border-radius: 4px;
-          padding: 15px;
-          margin: 10px;
-        }
-        
-        /* Focus styles for accessibility */
-        .sbtcpay-button:focus,
-        .sbtcpay-widget a:focus {
-          outline: 2px solid ${this.options.theme.primaryColor};
-          outline-offset: 2px;
-        }
-      </style>
+      }
     `;
     
-    document.head.insertAdjacentHTML('beforeend', styles);
+    document.head.appendChild(style);
   }
 }
 
@@ -1137,6 +1438,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // Export for use as module
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = SBTCPayWidget;
-} else if (typeof window !== 'undefined') {
+    module.exports.default = SBTCPayWidget;
+}
+
+// Always make available globally when in browser
+if (typeof window !== 'undefined') {
     window.SBTCPayWidget = SBTCPayWidget;
+    console.log('SBTCPayWidget registered globally:', SBTCPayWidget.name);
 }

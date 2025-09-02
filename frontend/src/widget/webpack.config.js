@@ -13,8 +13,12 @@ module.exports = (env, argv) => {
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: isProduction ? '[name].min.js' : '[name].js',
-      library: 'SBTCPayWidget',
-      libraryTarget: 'umd',
+      // Each entry point gets its own namespace
+      library: {
+        name: '[name]PayWidget', 
+        type: 'umd',
+        export: 'default'
+      },
       globalObject: 'this'
     },
     module: {
@@ -41,7 +45,8 @@ module.exports = (env, argv) => {
     plugins: [
       new HtmlWebpackPlugin({
         template: './src/widget.html',
-        filename: 'index.html'
+        filename: 'index.html',
+        chunks: ['widget'] // Only include widget.js in the HTML
       }),
       ...(isProduction ? [
         new MiniCssExtractPlugin({

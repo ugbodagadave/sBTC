@@ -1,245 +1,274 @@
-# sBTCPay Widget and Payment Links
+# sBTCPay Widget
 
-This package provides an embeddable payment widget and payment link generation system for sBTCPay - an sBTC payment gateway for the Stacks blockchain.
+An embeddable payment widget for accepting sBTC payments with multiple wallet support.
+
+![sBTCPay Widget](https://placehold.co/600x400/3498db/ffffff?text=sBTCPay+Widget&font=Poppins)
 
 ## Features
 
-- **Embeddable Payment Widget**: A customizable widget that can be embedded in any website
-- **Payment Link Generation**: Create payment links that can be shared with customers
-- **QR Code Support**: Generate QR codes for mobile payments
-- **Responsive Design**: Works on all device sizes
-- **Customization Options**: Customize colors, logos, and styling to match your brand
-- **Accessibility**: WCAG compliant interface
+- **Multiple Wallet Support**: Integrates with popular Bitcoin and Stacks wallets:
+  - Leather Wallet
+  - Xverse Wallet
+  - Unisat Wallet
+  - OKX Wallet
+  - Hiro Wallet
+  - Bitcoin Connect / WebLN compatible wallets
+  - WalletConnect
+  
+- **QR Code Generation**: Easily generate QR codes for payment flows
+- **Payment Status Polling**: Track transaction confirmation on the blockchain
+- **Customizable UI**: Fully customizable theme options
+- **Responsive Design**: Works seamlessly on desktop and mobile
 
 ## Installation
 
-### Using a Script Tag
-
-Include the widget script in your HTML:
-
-```html
-<!-- For the payment widget -->
-<script src="https://your-domain.com/widget.min.js" 
-        data-api-key="YOUR_API_KEY" 
-        data-payment-intent-id="PAYMENT_INTENT_ID"
-        data-container="#widget-container">
-</script>
-
-<!-- For payment link generation -->
-<script src="https://your-domain.com/payment-links.min.js"></script>
-```
-
 ### Using npm
-
-Install the package:
 
 ```bash
 npm install @sbtcpay/widget
 ```
 
-Import and use in your application:
-
-```javascript
-import { SBTCPayWidget, SBTCPayPaymentLinks } from '@sbtcpay/widget';
-
-// Create a payment widget
-const widget = new SBTCPayWidget({
-  apiKey: 'YOUR_API_KEY',
-  paymentIntentId: 'PAYMENT_INTENT_ID',
-  container: '#widget-container'
-});
-
-// Generate payment links
-const paymentLinks = new SBTCPayPaymentLinks({
-  apiKey: 'YOUR_API_KEY'
-});
-
-const paymentLink = await paymentLinks.generatePaymentLink({
-  amount: 0.01,
-  description: 'Payment for services'
-});
-```
-
-## Payment Widget
-
-### Basic Usage
-
-```html
-<div id="widget-container"></div>
-
-<script src="widget.min.js" 
-        data-api-key="YOUR_API_KEY" 
-        data-payment-intent-id="PAYMENT_INTENT_ID"
-        data-container="#widget-container">
-</script>
-```
-
-### Programmatic Usage
-
-```javascript
-import { SBTCPayWidget } from '@sbtcpay/widget';
-
-const widget = new SBTCPayWidget({
-  apiKey: 'YOUR_API_KEY',
-  paymentIntentId: 'PAYMENT_INTENT_ID',
-  container: '#widget-container',
-  theme: {
-    primaryColor: '#3498db',
-    backgroundColor: '#ffffff',
-    textColor: '#333333',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif',
-    borderRadius: '8px',
-    logoUrl: 'https://your-domain.com/logo.png'
-  },
-  onSuccess: (paymentData) => {
-    console.log('Payment successful!', paymentData);
-  }
-});
-```
-
-### Widget Options
-
-| Option | Type | Description |
-|--------|------|-------------|
-| `apiKey` | string | Your sBTCPay API key |
-| `paymentIntentId` | string | The ID of the payment intent to process |
-| `container` | string | CSS selector for the container element |
-| `theme` | object | Theme customization options |
-| `theme.primaryColor` | string | Primary color for buttons and highlights |
-| `theme.backgroundColor` | string | Background color of the widget |
-| `theme.textColor` | string | Text color |
-| `theme.fontFamily` | string | Font family for the widget |
-| `theme.borderRadius` | string | Border radius for elements |
-| `theme.logoUrl` | string | URL to your logo image |
-| `onSuccess` | function | Callback function when payment is successful |
-
-## Payment Links
-
-### Basic Usage
-
-```javascript
-import { SBTCPayPaymentLinks } from '@sbtcpay/widget';
-
-const paymentLinks = new SBTCPayPaymentLinks({
-  apiKey: 'YOUR_API_KEY',
-  baseUrl: 'https://your-api-domain.com/api/v1'
-});
-
-// Generate a payment link
-const paymentLink = await paymentLinks.generatePaymentLink({
-  amount: 0.01,
-  description: 'Payment for services',
-  currency: 'sBTC',
-  expiresAt: '2023-12-31T23:59:59Z', // Optional
-  password: 'secret123', // Optional
-  metadata: { // Optional
-    orderId: '12345',
-    customerId: '67890'
-  }
-});
-
-console.log('Payment link:', paymentLink.link);
-console.log('QR code data:', paymentLink.qrCodeData);
-
-// Generate a QR code for the payment link
-const qrCodeDataUrl = await paymentLinks.generateQRCode(paymentLink.link);
-```
-
-### Payment Link Options
-
-| Option | Type | Required | Description |
-|--------|------|----------|-------------|
-| `amount` | number | Yes | Payment amount in sBTC |
-| `description` | string | Yes | Payment description |
-| `currency` | string | No | Currency code (default: 'sBTC') |
-| `expiresAt` | string | No | Expiration date in ISO format |
-| `password` | string | No | Password protection for the payment link |
-| `metadata` | object | No | Custom metadata for the payment |
-
-## Responsive Design
-
-The widget is fully responsive and will adapt to different screen sizes. On mobile devices, it will take up most of the screen width, while on desktops it will have a maximum width of 400px.
-
-## Customization
-
-You can customize the appearance of the widget using the theme options:
-
-```javascript
-const widget = new SBTCPayWidget({
-  // ... other options
-  theme: {
-    primaryColor: '#8e44ad',        // Purple primary color
-    backgroundColor: '#f9f9f9',     // Light gray background
-    textColor: '#2c3e50',           // Dark blue text
-    fontFamily: '"Helvetica Neue", Arial, sans-serif',
-    borderRadius: '12px',           // More rounded corners
-    logoUrl: 'https://example.com/logo.png' // Your logo
-  }
-});
-```
-
-Or using data attributes in HTML:
-
-```html
-<script src="widget.min.js" 
-        data-api-key="YOUR_API_KEY" 
-        data-payment-intent-id="PAYMENT_INTENT_ID"
-        data-container="#widget-container"
-        data-primary-color="#8e44ad"
-        data-background-color="#f9f9f9"
-        data-text-color="#2c3e50"
-        data-font-family="'Helvetica Neue', Arial, sans-serif"
-        data-border-radius="12px"
-        data-logo-url="https://example.com/logo.png">
-</script>
-```
-
-## Accessibility
-
-The widget follows WCAG guidelines for accessibility:
-- Proper contrast ratios for text and background colors
-- Keyboard navigable elements
-- Focus indicators for interactive elements
-- Semantic HTML structure
-
-## Building
-
-To build the widget and payment links system:
+### Using yarn
 
 ```bash
+yarn add @sbtcpay/widget
+```
+
+### Direct script inclusion
+
+```html
+<script src="https://unpkg.com/@sbtcpay/widget/dist/widget.min.js"></script>
+```
+
+## Basic Usage
+
+### HTML
+
+```html
+<div id="sbtcpay-widget-container"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    new SBTCPayWidget({
+      apiKey: 'your_api_key',
+      paymentIntentId: 'your_payment_intent_id',
+      container: '#sbtcpay-widget-container'
+    });
+  });
+</script>
+```
+
+### JavaScript (ES Modules)
+
+```javascript
+import SBTCPayWidget from '@sbtcpay/widget';
+
+// Initialize the widget
+const widget = new SBTCPayWidget({
+  apiKey: 'your_api_key',
+  paymentIntentId: 'your_payment_intent_id',
+  container: '#sbtcpay-widget-container'
+});
+```
+
+## Configuration Options
+
+The widget accepts the following configuration options:
+
+```javascript
+const widget = new SBTCPayWidget({
+  // API configuration (required)
+  apiKey: 'your_api_key', // Your sBTCPay API key
+  paymentIntentId: 'payment_intent_id', // Payment intent ID
+  baseUrl: 'https://api.sbtcpay.com/api/v1', // API base URL (default: 'http://localhost:3000/api/v1')
+  
+  // Container configuration
+  container: '#widget-container', // CSS selector for the widget container
+  
+  // Wallet configuration
+  enabledWallets: ['leather', 'xverse', 'unisat', 'okx', 'hiro', 'bitcoin-connect', 'walletconnect'], // Enabled wallet types
+  
+  // Theme customization
+  theme: {
+    primaryColor: '#3498db', // Primary brand color
+    backgroundColor: '#ffffff', // Widget background color
+    textColor: '#333333', // Text color
+    fontFamily: "'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", // Font family
+    borderRadius: '8px', // Border radius for the widget
+    logoUrl: 'https://your-logo-url.com/logo.png' // URL to your logo
+  },
+  
+  // Accessibility options
+  lang: 'en', // Language code
+  
+  // Payment options
+  showQRCode: true, // Whether to show QR code option
+  enablePolling: true, // Whether to enable payment status polling
+  pollingInterval: 5000, // Payment status polling interval in ms
+  
+  // Callback functions
+  onSuccess: function(paymentData) {
+    console.log('Payment successful!', paymentData);
+    // Handle successful payment
+  },
+  onFailure: function(error) {
+    console.error('Payment failed!', error);
+    // Handle failed payment
+  },
+  onCancel: function() {
+    console.log('Payment cancelled');
+    // Handle cancelled payment
+  }
+});
+```
+
+## Methods
+
+### Initialize the Widget
+
+```javascript
+await widget.init();
+```
+
+### Connect to a Wallet
+
+```javascript
+await widget.connectWallet('leather'); // Connect to Leather wallet
+```
+
+### Disconnect from Current Wallet
+
+```javascript
+widget.disconnectWallet();
+```
+
+### Show QR Code for Payment
+
+```javascript
+await widget.showQRCode();
+```
+
+### Process Payment
+
+```javascript
+await widget.handlePayment();
+```
+
+### Check Payment Status
+
+```javascript
+const status = await widget.checkPaymentStatus();
+console.log('Payment status:', status);
+```
+
+## Event Handling
+
+You can also add custom event listeners to handle various widget events:
+
+```javascript
+// Listen for successful payment
+widget.addEventListener('payment-success', (event) => {
+  console.log('Payment successful!', event.detail);
+});
+
+// Listen for failed payment
+widget.addEventListener('payment-failure', (event) => {
+  console.error('Payment failed!', event.detail);
+});
+
+// Listen for wallet connection
+widget.addEventListener('wallet-connected', (event) => {
+  console.log('Wallet connected!', event.detail);
+});
+
+// Listen for wallet disconnection
+widget.addEventListener('wallet-disconnected', () => {
+  console.log('Wallet disconnected!');
+});
+```
+
+## Styling
+
+The widget comes with default styling that can be customized through the `theme` option. Additionally, you can override specific styles using CSS:
+
+```css
+/* Example: Customize widget header */
+.sbtcpay-widget-header {
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 15px;
+}
+
+/* Example: Customize wallet buttons */
+.sbtcpay-wallet-button {
+  background: linear-gradient(to right, #3498db, #2980b9);
+  border: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+```
+
+## Testing
+
+To run the widget tests:
+
+```bash
+# Install dependencies
+npm install
+
+# Run tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+```
+
+## Development
+
+To contribute to the development of the sBTCPay Widget:
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
 npm run build
 ```
 
-This will generate:
-- `dist/widget.min.js` - The payment widget
-- `dist/payment-links.min.js` - The payment links system
-- `dist/index.html` - Demo page
+## Troubleshooting
 
-For development:
+### Wallet Not Detected
 
-```bash
-npm run dev
-```
+If a wallet is not being detected:
 
-This will start a development server at http://localhost:9001
+1. Ensure the wallet extension is installed and enabled in your browser
+2. Verify the wallet is unlocked and accessible
+3. Check if the wallet is included in the `enabledWallets` option
 
-## Browser Support
+### QR Code Not Displaying
 
-The widget supports all modern browsers including:
+If the QR code is not displaying:
+
+1. Ensure the `qrcode` dependency is properly installed
+2. Verify that `showQRCode` option is set to `true`
+3. Check for console errors related to QR code generation
+
+## Browser Compatibility
+
+The sBTCPay Widget is compatible with modern browsers:
+
 - Chrome 60+
-- Firefox 60+
-- Safari 12+
-- Edge 79+
-
-For older browsers, you may need to include polyfills for Promise and fetch.
-
-## Security
-
-- All communication with the API is done over HTTPS
-- API keys should be kept secure and not exposed in client-side code
-- Payment links can be password protected for sensitive payments
-- QR codes contain only the payment information, not sensitive data
+- Firefox 55+
+- Safari 11+
+- Edge 16+
 
 ## License
 
-MIT
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For support, please contact:
+- support@sbtcpay.com
+- Join our [Discord](https://discord.gg/sbtcpay)

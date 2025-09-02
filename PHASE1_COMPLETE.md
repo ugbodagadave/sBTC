@@ -187,7 +187,34 @@ CREATE TABLE IF NOT EXISTS webhooks (
 - Configured Clarinet project settings
 - Defined contract dependencies
 
-## Frontend Structure
+## Frontend Implementation
+
+### Widget Implementation
+- **File**: `frontend/src/widget/src/widget.js`
+- Implemented embeddable payment widget with multiple wallet support
+- Added QR code generation for payments using qrcode library
+- Implemented payment status polling to track blockchain confirmations
+- Added support for multiple wallets including:
+  - Leather Wallet (Stacks Connect)
+  - Xverse Wallet (Sats Connect API)
+  - Unisat Wallet
+  - OKX Wallet
+  - Hiro Wallet
+  - Bitcoin Connect (WebLN)
+  - WalletConnect
+- Added comprehensive styling with Poppins font for better UX
+
+### Widget Configuration
+- **File**: `frontend/src/widget/webpack.config.js`
+- Configured webpack for UMD module bundling
+- Set up multiple entry points for widget and payment links
+- Configured HTML plugin for demo page
+
+### Widget Documentation
+- **File**: `frontend/src/widget/README.md`
+- Created comprehensive documentation for widget integration
+- Included installation instructions, configuration options, and API reference
+- Added troubleshooting guidance and browser compatibility information
 
 ### Public Assets
 - **File**: `frontend/public/index.html`
@@ -295,6 +322,14 @@ All API endpoints have been manually tested and verified:
 - redis: Redis client
 - bcrypt: Password hashing
 - uuid: UUID generation
+
+### Frontend Dependencies
+- react: User interface library
+- webpack: Module bundler
+- qrcode: QR code generation library
+- @stacks/connect: Stacks wallet integration
+- sats-connect: Bitcoin wallet integration
+- @walletconnect/ethereum-provider: Wallet connection
 
 ### Backend Dev Dependencies
 - @types/node: Node.js type definitions

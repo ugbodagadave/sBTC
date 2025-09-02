@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>sBTCPay Widget Test</title>
+    <!-- Import Poppins font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
@@ -19,6 +21,8 @@
         }
         h1, h2 {
             color: #333;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
         }
         code {
             background: #f4f4f4;
@@ -42,49 +46,55 @@
         <div id="widget-container-2"></div>
     </div>
     
-    <script src="./widget.js"></script>
     <script>
-        // Programmatically create widgets after the DOM is loaded
+        // Initialize widgets after the script has loaded
         document.addEventListener('DOMContentLoaded', function() {
-            // Wait for the widget library to be available
-            function waitForWidget(callback) {
-                if (window.SBTCPayWidget) {
-                    callback();
-                } else {
-                    setTimeout(() => waitForWidget(callback), 100);
-                }
-            }
+            console.log('DOM Loaded');
             
-            waitForWidget(() => {
-                // Get the widget constructor
-                const Widget = window.SBTCPayWidget;
-                
-                // Create a basic widget
-                setTimeout(() => {
-                    new Widget({
-                        apiKey: 'test_api_key',
-                        paymentIntentId: '08dce6dd-316a-4c32-b790-0fd675135673',
-                        container: '#widget-container-1'
-                    });
-                }, 100);
-                
-                // Create a customized widget
-                setTimeout(() => {
-                    new Widget({
-                        apiKey: 'test_api_key',
-                        paymentIntentId: '08dce6dd-316a-4c32-b790-0fd675135673',
-                        container: '#widget-container-2',
-                        theme: {
-                            primaryColor: '#8e44ad',
-                            backgroundColor: '#f9f9f9',
-                            textColor: '#2c3e50',
-                            fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-                            borderRadius: '12px',
-                            logoUrl: 'https://placehold.co/100x50/8e44ad/ffffff?text=Logo'
-                        }
-                    });
-                }, 200);
-            });
+            // Basic widget - direct initialization
+            document.getElementById('widget-container-1').innerHTML = '<div class="loading">Loading widget...</div>';
+            
+            // Wait for script to load and register global
+            setTimeout(() => {
+                if (window.SBTCPayWidget) {
+                    console.log('SBTCPayWidget found:', window.SBTCPayWidget.name);
+                    
+                    try {
+                        // Basic widget
+                        new window.SBTCPayWidget({
+                            apiKey: 'test_api_key',
+                            paymentIntentId: '08dce6dd-316a-4c32-b790-0fd675135673',
+                            container: '#widget-container-1',
+                            theme: {
+                                fontFamily: "'Poppins', sans-serif"
+                            }
+                        });
+                        
+                        // Custom themed widget
+                        new window.SBTCPayWidget({
+                            apiKey: 'test_api_key',
+                            paymentIntentId: '08dce6dd-316a-4c32-b790-0fd675135673',
+                            container: '#widget-container-2',
+                            theme: {
+                                primaryColor: '#8e44ad',
+                                backgroundColor: '#f9f9f9',
+                                textColor: '#2c3e50',
+                                fontFamily: "'Poppins', sans-serif",
+                                borderRadius: '12px',
+                                logoUrl: 'https://placehold.co/100x50/8e44ad/ffffff?text=Logo'
+                            }
+                        });
+                        
+                        console.log('Widgets initialized successfully');
+                    } catch (err) {
+                        console.error('Error initializing widgets:', err);
+                    }
+                } else {
+                    console.error('SBTCPayWidget not found on window object');
+                    document.getElementById('widget-container-1').innerHTML = 
+                        '<div class="error" style="color: red">Error: Widget failed to load</div>';
+                }
+            }, 500);
         });
     </script>
 </body>
