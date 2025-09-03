@@ -6,18 +6,11 @@
   "tailwind": {
     "config": "tailwind.config.js",
     "css": "src/index.css",
-    "base": true,
-    "prefix": "",
-    "strict": false
+    "baseColor": "slate",
+    "cssVariables": true
   },
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils"
-  },
-  "windows": {
-    "path": {
-      "normalize": true,
-      "useUnixStyle": false
-    }
   }
 }
