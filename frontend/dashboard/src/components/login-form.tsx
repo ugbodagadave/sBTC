@@ -25,7 +25,12 @@ export function LoginForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={(e) => {
+              e.preventDefault();
+              // In a real application, you would validate credentials here
+              localStorage.setItem('authToken', 'demo-token');
+              window.location.href = '/';
+            }}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
@@ -48,7 +53,10 @@ export function LoginForm({
                 </div>
                 <Input id="password" type="password" required />
               </div>
-              <Button type="submit" className="w-full">
+              <Button 
+                type="submit" 
+                className="w-full bg-white text-black hover:bg-gray-100"
+              >
                 Login
               </Button>
               <Button variant="outline" className="w-full">

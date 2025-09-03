@@ -19,7 +19,7 @@ const App = () => {
           <SidebarProvider>
             <div className="flex w-full">
               <AppSidebar />
-              <main className="flex-1">
+              <main className="flex-1 ml-0 md:ml-64 transition-all duration-300 min-h-screen">
                 <Routes>
                   <Route path="/" element={
                     <ProtectedRoute>

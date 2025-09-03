@@ -1,9 +1,5 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  SidebarProvider,
-} from '@/components/ui/sidebar';
-import AppSidebar from '@/components/AppSidebar';
 import Header from '@/components/Header';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 
@@ -73,11 +69,9 @@ const Dashboard = () => {
   ];
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <main className="w-full">
-        <Header title="Dashboard" subtitle="Welcome back! Here's what's happening with your store today." />
-        <div className="container mx-auto px-4 py-8">
+    <>
+      <Header title="Dashboard" subtitle="Welcome back! Here's what's happening with your store today." />
+      <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {kpiData.map((kpi, index) => (
               <Card key={index} className="hover:shadow-card-hover transition-shadow">
@@ -195,8 +189,7 @@ const Dashboard = () => {
             </Card>
           </div>
         </div>
-      </main>
-    </SidebarProvider>
+      </>
   );
 };
 
