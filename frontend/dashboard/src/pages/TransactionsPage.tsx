@@ -18,10 +18,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  SidebarProvider,
-} from '@/components/ui/sidebar';
-import AppSidebar from '@/components/AppSidebar';
 import Header from '@/components/Header';
 
 const TransactionsPage = () => {
@@ -89,125 +85,122 @@ const TransactionsPage = () => {
   const methodOptions = ['All', 'Bitcoin', 'Stacks', 'Credit Card', 'Bank Transfer'];
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <main className="w-full">
-        <Header title="Transactions" subtitle="View and manage all transactions" />
-        <div className="container mx-auto px-4 py-8">
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Filter Transactions</CardTitle>
-              <CardDescription>Search and filter your transaction history</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="md:col-span-2">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
-                    <Input
-                      placeholder="Search transactions..."
-                      className="pl-10"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {statusOptions.map((option) => (
-                        <SelectItem key={option} value={option.toLowerCase()}>
-                          {option}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Payment Method" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {methodOptions.map((option) => (
-                        <SelectItem key={option} value={option.toLowerCase().replace(' ', '-')}>
-                          {option}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+    <main className="w-full">
+      <Header title="Transactions" subtitle="View and manage all transactions" />
+      <div className="container mx-auto px-4 py-8">
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Filter Transactions</CardTitle>
+            <CardDescription>Search and filter your transaction history</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="md:col-span-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+                  <Input
+                    placeholder="Search transactions..."
+                    className="pl-10"
+                  />
                 </div>
               </div>
-              <div className="flex justify-end mt-4 space-x-2">
-                <Button variant="outline">
-                  <Filter className="mr-2 h-4 w-4" />
-                  More Filters
-                </Button>
-                <Button>
-                  <Download className="mr-2 h-4 w-4" />
-                  Export
-                </Button>
+              <div>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {statusOptions.map((option) => (
+                      <SelectItem key={option} value={option.toLowerCase()}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            </CardContent>
-          </Card>
+              <div>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Payment Method" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {methodOptions.map((option) => (
+                      <SelectItem key={option} value={option.toLowerCase().replace(' ', '-')}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex justify-end mt-4 space-x-2">
+              <Button variant="outline">
+                <Filter className="mr-2 h-4 w-4" />
+                More Filters
+              </Button>
+              <Button>
+                <Download className="mr-2 h-4 w-4" />
+                Export
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Transaction History</CardTitle>
-              <CardDescription>A list of all transactions</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Transaction ID</TableHead>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Payment Method</TableHead>
+        <Card>
+          <CardHeader>
+            <CardTitle>Transaction History</CardTitle>
+            <CardDescription>A list of all transactions</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Transaction ID</TableHead>
+                  <TableHead>Customer</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Payment Method</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {transactions.map((transaction) => (
+                  <TableRow key={transaction.id}>
+                    <TableCell className="font-medium">{transaction.id}</TableCell>
+                    <TableCell>{transaction.customer}</TableCell>
+                    <TableCell>{transaction.date}</TableCell>
+                    <TableCell>{transaction.amount}</TableCell>
+                    <TableCell>
+                      <span className={`px-2 py-1 rounded-full text-xs ${
+                        transaction.status === 'Completed' ? 'bg-green-100 text-green-800' :
+                        transaction.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {transaction.status}
+                      </span>
+                    </TableCell>
+                    <TableCell>{transaction.method}</TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {transactions.map((transaction) => (
-                    <TableRow key={transaction.id}>
-                      <TableCell className="font-medium">{transaction.id}</TableCell>
-                      <TableCell>{transaction.customer}</TableCell>
-                      <TableCell>{transaction.date}</TableCell>
-                      <TableCell>{transaction.amount}</TableCell>
-                      <TableCell>
-                        <span className={`px-2 py-1 rounded-full text-xs ${
-                          transaction.status === 'Completed' ? 'bg-green-100 text-green-800' :
-                          transaction.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-red-100 text-red-800'
-                        }`}>
-                          {transaction.status}
-                        </span>
-                      </TableCell>
-                      <TableCell>{transaction.method}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              <div className="flex items-center justify-between mt-6">
-                <div className="text-sm text-muted-foreground">
-                  Showing 1 to 7 of 7 entries
-                </div>
-                <div className="flex space-x-2">
-                  <Button variant="outline" size="sm" disabled>
-                    Previous
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    Next
-                  </Button>
-                </div>
+                ))}
+              </TableBody>
+            </Table>
+            <div className="flex items-center justify-between mt-6">
+              <div className="text-sm text-muted-foreground">
+                Showing 1 to 7 of 7 entries
               </div>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-    </SidebarProvider>
+              <div className="flex space-x-2">
+                <Button variant="outline" size="sm" disabled>
+                  Previous
+                </Button>
+                <Button variant="outline" size="sm">
+                  Next
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </main>
   );
 };
 

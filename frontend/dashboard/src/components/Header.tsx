@@ -10,9 +10,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Search, Bell, Menu, HelpCircle, LogOut } from 'lucide-react';
+import { Search, Bell, Menu, HelpCircle, LogOut, PanelLeft } from 'lucide-react';
 import {
   SidebarTrigger,
+  useSidebar,
 } from '@/components/ui/sidebar';
 
 interface HeaderProps {
@@ -22,6 +23,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ title, subtitle }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const { toggleSidebar } = useSidebar();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +33,9 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle }) => {
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-      <SidebarTrigger className="-ml-1" />
+      <Button variant="ghost" size="icon" className="-ml-1 mr-2" onClick={toggleSidebar}>
+        <PanelLeft className="h-5 w-5" />
+      </Button>
       <div className="flex items-center gap-2">
         <h1 className="text-lg font-semibold">{title}</h1>
       </div>
@@ -55,10 +59,8 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle }) => {
         </Button>
         
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Bell className="h-4 w-4" />
-            </Button>
+          <DropdownMenuTrigger className="flex h-8 w-8 items-center justify-center rounded-md p-0 text-foreground outline-none ring-ring transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2">
+            <Bell className="h-4 w-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-80">
             <DropdownMenuLabel>Notifications</DropdownMenuLabel>
@@ -85,13 +87,11 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle }) => {
         </DropdownMenu>
         
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-              <Avatar className="h-8 w-8">
-                <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </Button>
+          <DropdownMenuTrigger className="relative flex h-8 w-8 items-center justify-center rounded-full p-0 text-foreground outline-none ring-ring transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>

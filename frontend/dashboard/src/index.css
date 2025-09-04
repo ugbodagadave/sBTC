@@ -12,4 +12,13 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  
+  /* Sidebar colors */
+  --sidebar-background: #f8fafc;
+  --sidebar-foreground: #020817;
+  --sidebar-border: #e2e8f0;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #020817;
+  --sidebar-primary: #3b82f6;
+  --sidebar-primary-foreground: #f8fafc;
 }
