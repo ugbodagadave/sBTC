@@ -7,14 +7,15 @@ An embeddable payment widget for accepting sBTC payments with multiple wallet su
 ## Features
 
 - **Multiple Wallet Support**: Integrates with popular Bitcoin and Stacks wallets:
-  - Leather Wallet
-  - Xverse Wallet
+  - Leather Wallet (Stacks Connect)
+  - Xverse Wallet (Sats Connect)
   - Unisat Wallet
   - OKX Wallet
   - Hiro Wallet
   - Bitcoin Connect / WebLN compatible wallets
   - WalletConnect
   
+- **Stacks Blockchain Integration**: Direct integration with Stacks smart contracts for sBTC payments
 - **QR Code Generation**: Easily generate QR codes for payment flows
 - **Payment Status Polling**: Track transaction confirmation on the blockchain
 - **Customizable UI**: Fully customizable theme options
@@ -70,6 +71,32 @@ const widget = new SBTCPayWidget({
   container: '#sbtcpay-widget-container'
 });
 ```
+
+## Stacks Blockchain Integration
+
+The sBTCPay widget provides seamless integration with the Stacks blockchain for sBTC payments. When users connect a Stacks-compatible wallet (like Leather Wallet), payments are submitted directly to the Stacks blockchain through smart contracts.
+
+### How It Works
+
+1. **Wallet Connection**: Users connect their Stacks wallet (e.g., Leather Wallet) to the widget
+2. **Payment Submission**: Payment details are sent to the sBTCPay backend, which creates a transaction on the Stacks blockchain
+3. **Transaction Confirmation**: The widget monitors the transaction status on the Stacks blockchain
+4. **Payment Completion**: Once confirmed, the payment is marked as complete in the sBTCPay system
+
+### Supported Stacks Wallets
+
+- **Leather Wallet**: Full integration with Stacks Connect for seamless transaction signing
+- **Xverse Wallet**: Integration through Sats Connect API
+- **Hiro Wallet**: Native Stacks wallet support
+
+### Smart Contract Functions
+
+The widget interacts with the `payment-processor` smart contract deployed on the Stacks testnet:
+
+- `create-payment`: Creates a new payment entry on the blockchain
+- `complete-payment`: Marks a payment as completed
+- `get-payment`: Retrieves payment details
+- `get-payment-status`: Retrieves payment status
 
 ## Configuration Options
 
@@ -152,6 +179,12 @@ await widget.showQRCode();
 
 ```javascript
 await widget.handlePayment();
+```
+
+### Submit Stacks Payment
+
+```javascript
+await widget.submitStacksPayment(); // Submit payment directly to Stacks blockchain
 ```
 
 ### Check Payment Status
@@ -253,6 +286,14 @@ If the QR code is not displaying:
 1. Ensure the `qrcode` dependency is properly installed
 2. Verify that `showQRCode` option is set to `true`
 3. Check for console errors related to QR code generation
+
+### Stacks Transaction Issues
+
+If you're experiencing issues with Stacks transactions:
+
+1. Verify that the Stacks network is accessible
+2. Check that the merchant has properly configured their Stacks wallet
+3. Ensure the payment processor smart contract is deployed and accessible
 
 ## Browser Compatibility
 

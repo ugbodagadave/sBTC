@@ -75,8 +75,8 @@ class StacksWorker {
           
           console.log(`Checking payment ${paymentIntentId} with Stacks TX ID ${stacksTxId}`);
           
-          // TODO: Implement actual Stacks transaction status checking
-          // This would involve calling the Stacks API to get transaction details
+          // Check transaction status on Stacks blockchain
+          // In a real implementation, we would call the Stacks API to get transaction details
           // For now, we'll simulate this with a placeholder
           
           // Simulate checking the transaction status

@@ -139,7 +139,7 @@ class SBTCPayWidget {
           wallets.push({
             id: 'bitcoin-connect',
             name: 'Bitcoin Connect',
-            icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNGODlDMzUiLz4KPHBhdGggZD0iTTI4LjQ5MzIgMTcuODQ3MUMyOC45MDIzIDE1LjY2MTUgMjcuMjI0OCAxNC40MTQyIDI0Ljk0OTcgMTMuNTg2NEwyNS44NTY0IDEwLjEwMDFMMjMuODI3IDkuNTgxMDdMMjIuOTQzNyAxMi45NzY0QzIyLjM3ODMgMTIuODM2NCAyMS43OTUzIDEyLjcwMzggMjEuMjE0NyAxMi41NzIzTDIyLjEwMzQgOS4xNTI4OUwyMC4wNzQ2IDguNjMzODVMMTkuMTY3OSAxMi4xMjAyQzE4LjY5OTYgMTIuMDEzIDE4LjI0IDE5Ljc0NzQgMTguMjQgMTkuNzQ3NEwxOC4yNDAzIDE5Ljc0NjNDMTYuNzU2OCAxOS4zNzc2IDE1LjczIDE4Ljk0IDE1LjYwNyAxNi43Njk5TDEzLjU3NzcgMTcuMjkwMUwxMi41ODMzIDIxLjA1NzlDMTIuNTgzMyAyMS4wNTc5IDEzLjU3ODEgMjEuMjkxIDE0LjUzNjkgMjEuNDk2OEMxNS4zOTM4IDIxLjY4MTcgMTUuMzI1OSAyMS42MzQzIDE1LjMyNTkgMjEuNjM0M0wxNC4xODMyIDI2LjAzNzRMMTYuMjEzIDI2LjU1NjRMMTcuMTE5NyAyMy4wNzExQzE3LjcwMzcgMjMuMjIzIDE4LjI2OTIgMjMuMzYzIDAxOS40NTQgMjMuNjk2NEMxNi4wMTUzIDIzLjMwNDIgMTYuMDE1MyAyMy4zMDQyIDE2LjMxNTMgMjMuMzA0MkMxNy44MDkgMjYuMDA4MSAyMC4zNjkyIDI1LjQ0NjkgMjEuMjUwMyAyMy4wNTUxQzIyLjEzMTMgMjAuNjYzMiAyMS4yNTI0IDE5LjA4MDggMTkuNDA0NCAxOC4wMzMyQzIwLjgwNzEgMTcuNzAxNCwyMS44ODkxIDE2Ljk1MTcgMjIuMjM3NyAxNS40MjE0QzIyLjcwMDYgMTMuMzk0MSAyMS40MjI4IDEyLjIxOTkgMTkuNjIxOCAxMS42MTgxTDIwLjUzMDEgOC4xMjk5NEwxOC41IDcuNjExMDJMMTcuNTkzMyAxMS4wOTc0QzE3LjAyNzkgMTAuOTU3NCAxNi40NDQ5IDEwLjgyNDcgMTUuODc1NCAxMC42OTExTDE2Ljc4NjYgNy4yMjE0OUwxNC43NTc4IDYuNzAyNDVMMTMuODQ5NSAxMC4xODlDMTMuMzgxMiAxMC4wODE4IDEyLjkyMTYgOS45NzQ1MiAxMi40ODE4IDkuODYyNzRMMTIuNDkwNyA5LjgyNDE5TDkuNjMyNzkgOS4xMTQ1N7w5LjA3ODk2IDExLjI4NzFDOS4wNzg5NiAxMS4yODcxIDEwLjU2MyAxMS42NTUxIDEwLjUyMiAxMS42OTM3QzExLjM3ODkgMTEuODc4NiAxMS41NjExIDIuNDEwNCAxMS41NjExIDEyLjQxMDRDMTEuNDM4IDEyLjc1OTMgMTEuMjcyMyAxMi45OTg0IDEwLjc4MjggMTMuMDc2N0MxMC44MjQgMTMuMDM4IDkuMzM4MDYgMTIuNzQ5MiA5LjMzODA2IDEyLjc0OTJMOC4zNDM3IDE1LjE0MTdMMTAuOTkwNSAxNS43ODU0QzExLjUwODEgMTUuOTE3OSAxMi4wMTU1IDE2LjA1ODEgMTIuNTE0NSAxNi4xOTI5TDExLjYwMzMgMTkuNzAzNEwxMy42MzIxIDIwLjIyMjRMMTQuNTM4OCA2LjczNTk5QzE1LjExOTYgMTYuODg3NSAxNS43MDcgMTcuMDI1IDE2LjI4OCAxNy4xNTc3TDE1LjM4MSAyMC42NDIxTDE3LjQxIDIxLjE2MUwxOC4zMjEyIDE3LjY1NzNDMjEuMzE3MyAxOC4yNDI1IDIzLjUxMDYgMTguMDE3MyAyNC40NTYxIDE1LjM3MUMyNS4yMDA3IDEzLjI3NzggMjQuNTYyOCAxMi4xMDQ0IDIzLjEyMzMgMTEuMzU2NkMyNC4xODA3IDExLjE1NyAyNC45NzU0IDEwLjQ0MjUgMjUuMjU2MyA5LjA0MTc5QzI1LjY0MTggNy4xMzExOCAyNC4xOTQ1IDYuMjI3NzMgMjIuMzM2NCA1LjY5ODA0TDIzLjI0NDggMi4yMTA3NUwyMS4yMTU5IDEuNjkxN7wyMC4zMTI2IDUuMTYyNDJDMTkuNzQ4MiA1LjAyMTQ4IDE5LjE2MzkgNC44OTA0MSAxOC41ODI0IDQuNzU2NTdMMTkuNDkwNyAxLjMwMTYxTDE3LjQ2MTkgMC43ODI1NjhMMTYuNTUzNSA0LjI2OTg0QzE2LjA5MTEgNC4xNjQxNCAxNS42MzY2IDQuMDYwNzMgMTUuMTk4NyAzLjk0OTc5TDE1LjIwNjkgMy45MTU0MUwxMi4zNDk1IDMuMjA1NzlMMTEuNzk1NiA1LjM3ODM0QzExLjc5NTYgNS4zNzgzNCAxMy4yNzk2IDUuNzQ2MzMgMTMuMjM4NiA1Ljc4NDkyQzE0LjA5NTQgNS45Njk4NSAxNC4yNzc2IDYuNTAxNjQgMTQuMjc3NiA2LjUwMTY0TDEyLjM0OTkgMTMuMDM0OEwxMS4yMDY1IDE3LjQzNzlMMTMuMjM2MyAxNy45NTY5TDE0LjE0MyAxNC40NzE2QzE0LjcyOCAxNC42MjM2IDE1LjI5MzMgMTQuNzYzOSAxNS44NDkgMTQuODk3MkwxNC45NDc1IDE4LjM2OTFMMTYuOTc2MyAxOC44ODhMMTcuODgzIDE1LjQwMTdDMjAuODc5MSAxNS45ODY4IDIzLjA3MjUgMTUuNzYxNiAyNC4wMTggMTMuMTE1NEMyNC43NjI2IDExLjAyMTggMjQuMTI0NiA5Ljg0ODQxIDIyLjY4NTIgOS4xMDA2QzIzLjc0MjYgOC45MDA5NyAyNC41MzczIDguMTg2NDcgMjQuODE4MiA2Ljc4NThDMjUuMjExNCA0Ljg2NDQyIDIzLjc2MDQgMy45NTczNCAyMS44OTQ5IDMuNDMwODhMMjEuODk1IDMuNDMwN0wyMi44MDMzIDAgMjAuNzc0NSAtMC41MTkwNDNMMTkuODcxMyAyLjk1MTY5QzE5LjMwNjkgMi44MTA3NSAxOC43MjI1IDIuNjc5NjggMTguMTQxMSAyLjU0NTg0TDE5LjA0ODQgLTAuOTA5MTQ1TDE3LjAxOTYgLTEuNDI4MjFMMTYuMTExMyAyLjA1OTA4QzE1LjY0MjggMS45NTE3OSAxNS4xODQgMS44NDU3MyAxNC43NDQ2IDEuNzMzMDhMMTQuNzU0MyAxLjY5MjYxTDExLjg5NTkgMC45ODQwNjJMMTEuMzQyMiAzLjE1NjUxQzExLjM0MjIgMy4xNTY1MSAxMi44MjYyIDMuNTI0NSAxMi43ODUyIDMuNTYzMDhDMTMuNjQyIDMuNzQ4MDIgMTMuODI0MyA0LjI3OTgxIDEzLjgyNDMgNC4yNzk4MUwxMS44OTY2IDEwLjgxM0wxMC43NTMyIDE1LjIxNjFMMTIuNzgzIDE1LjczNTFMMTMuNjg5NyAxMi4yNDk4QzE0LjI3NDcgMTIuNDAxOCAxNC44NCAxMi41NDIxIDE1LjM5NTcgMTIuNjc1NEwxNC40ODg3IDE2LjE0NjNMMTYuNTE3NSAxNi42NjUzTDE3LjY2MDkgMTEuMjYyMkwxNy42NjA3IDExLjI2MjZDMTkuNDU0NSAxMy45NjY1IDIyLjAxNDcgMTMuNDA1MyAyMi44OTU4IDExLjAxMzRDMjMuNzc2OSA4LjYyMTU0IDIyLjg5OCA3LjAzOTE0IDIxLjA1IDUuOTkxNTVDMjIuNDUyNyA1LjY1OTc1IDIzLjUzNDcgNC45MSAyMy44ODMzIDMuMzc5N0MyNC4zNDYyIDEuMzUyNDMgMjMuMDY4NCAwLjE3ODIyOCAyMS4yNjc0IC0wLjQyMzU5MUwyMS44OTUgMy40MzA3QzIwLjc0MSAzLjA5MzcgMTkuMjU2NyAyLjgwMzkgMTYuNTUzNSA0LjI2OThMMTcuODgzIDEyLjE5OTZaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K',
+            icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNGODlDMzUiLz4KPHBhdGggZD0iTTI4LjQ5MzIgMTcuODQ3MUMyOC45MDIzIDE1LjY2MTUgMjcuMjI0OCAxNC40MTQyIDI0Ljk0OTcgMTMuNTg2NEwyNS44NTY0IDEwLjEwMDFMMjMuODI3IDkuNTgxMDdMMjIuOTQzNyAxMi45NzY0QzIyLjM3ODMgMTIuODM2NCAyMS43OTUzIDEyLjcwMzggMjEuMjE0NyAxMi41NzIzTDIyLjEwMzQgOS4xNTI4OUwyMC4wNzQ2IDguNjMzODVMMTkuMTY3OSAxMi4xMjAyQzE4LjY5OTYgMTIuMDEzIDE4LjI0IDE5Ljc0NzQgMTguMjQgMTkuNzQ3NEwxOC4yNDAzIDE5Ljc0NjNDMTYuNzU2OCAxOS4zNzc2IDE1LjczIDE4Ljk0IDE1LjYwNyAxNi43Njk5TDEzLjU3NzcgMTcuMjkwMUwxMi41ODMzIDIxLjA1NzlDMTIuNTgzMyAyMS4wNTc5IDEzLjU3ODEgMjEuMjkxIDE0LjUzNjkgMjEuNDk2OEMxNS4zOTM4IDIxLjY4MTcgMTUuMzI1OSAyMS42MzQzIDE1LjMyNTkgMjEuNjM0M0wxNC4xODMyIDI2LjAzNzRMMTYuMjEzIDI2LjU1NjRMMTcuMTE5NyAyMy4wNzExQzE3LjcwMzcgMjMuMjIzIDE4LjI2OTIgMjMuMzYzIDAxOS40NTQgMjMuNjk2NEMxNi4wMTUzIDIzLjMwNDIgMTYuMDE1MyAyMy4zMDQyIDE2LjMxNTMgMjMuMzA0MkMxNy44MDkgMjYuMDA4MSAyMC4zNjkyIDI1LjQ0NjkgMjEuMjUwMyAyMy4wNTUxQzIyLjEzMTMgMjAuNjYzMiAyMS4yNTI0IDE5LjA4MDggMTkuNDA0NCAxOC4wMzMyQzIwLjgwNzEgMTcuNzAxNCwyMS44ODkxIDE2Ljk1MTcgMjIuMjM3NyAxNS40MjE0QzIyLjcwMDYgMTMuMzk0MSAyMS40MjI4IDEyLjIxOTkgMTkuNjIxOCAxMS42MTgxTDIwLjUzMDEgOC4xMjk5NEwxOC41IDcuNjExMDJMMTcuNTkzMyAxMS4wOTc0QzE3LjAyNzkgMTAuOTU3NCAxNi40NDQ5IDEwLjgyNDcgMTUuODc1NCAxMC42OTExTDE2Ljc4NjYgNy4yMjE0OUwxNC43NTc4IDYuNzAyNDVMMTMuODQ5NSAxMC4xODlDMTMuMzgxMiAxMC4wODE4IDEyLjkyMTYgOS45NzQ1MiAxMi40ODE4IDkuODYyNzRMMTIuNDkwNyA5LjgyNDE5TDkuNjMyNzkgOS4xMTQ1N7w5LjA3ODk2IDExLjI4NzFDOS4wNzg5NiAxMS4yODcxIDEwLjU2MyAxMS42NTUxIDEwLjUyMiAxMS42OTM3QzExLjM3ODkgMTEuODc4NiAxMS41NjExIDIuNDEwNCAxMS41NjExIDEyLjQxMDRDMTEuNDM4IDEyLjc1OTMgMTEuMjcyMyAxMi45OTg0IDEwLjc4MjggMTMuMDc2N0MxMC44MjQgMTMuMDM4IDkuMzM4MDYgMTIuNzQ5MiA5LjMzODA2IDEyLjc0OTJMOC4zNDM3IDE1LjE0MTdMMTAuOTkwNSAxNS43ODU0QzExLjUwODEgMTUuOTE3OSAxMi4wMTU1IDE2LjA1ODEgMTIuNTE0NSAxNi4xOTI5TDExLjYwMzMgMTkuNzAzNEwxMy42MzIxIDIwLjIyMjRMMTQuNTM4OCA2LjczNTk5QzE1LjExOTYgMTYuODg3NSAxNS43MDcgMTcuMDI1IDE2LjI4OCAxNy4xNTc3TDE1LjM4MSAyMC42NDIxTDE3LjQxIDIxLjE2MUwxOC4zMjEyIDE3LjY1NzNDMjEuMzE3MyAxOC4yNDI1IDIzLjUxMDYgMTguMDE3MyAyNC40NTYxIDE1LjM3MUMyNS4yMDA3IDEzLjI3NzggMjQuNTYyOCAxMi4xMDQ0IDIzLjEyMzMgMTEuMzU2NkMyNC4xODA3IDExLjE1NyAyNC45NzU0IDEwLjQ0MjUgMjUuMjU2MyA5LjA0MTc5QzI1LjY0MTggNy4xMzExOCAyNC4xOTQ1IDYuMjI3NzMgMjIuMzM2NCA1LjY5ODA0TDIzLjI0NDggMi4yMTA3NUwyMS4yLjI0MDk1TDIwLjMxMjYgNS4xNjI0MkMxOS43NDgyIDUuMDIxNDggMTkuMTYzOSA0Ljg5MDQxIDE4LjU4MjQgNC43NTY1N0wxOS40OTA3IDEuMzA1NjhMMTcuNDYxOSAwLjc4MjU2OHMMNi41NTM1IDQuMjY5ODRDMTYuMDkyMSA0LjE2NDE0IDE1LjYzNjYgNC4wNjA3MyAxNS4xOTg3IDMuOTQ5NzlMMTUuMjA2OSAzLjkxNTQxMTIuMzQ5NSAzLjIwNTc5TTExLjc5NTYgNS4zNzgzNGMwIDAtMS40MTQ4IDEuMDQ3NS0xLjQxNDggMS4wNDc1QzExLjM0MjIgNS43NDYzMzExLjM0MjIgNS43ODQ5Mkw4LjI3NzMxIDE0LjUwMDU4QzguMjI3MzEgMTMuMzk2NiA3LjY1ODEyIDEyLjkyNTkgNy41NjM0MyAxMS44MzQ1TDcuMjY2NTggMTAuMTA0OEM3LjIyMjA3IDkuOTQ3NjggNy4yMDU3NiA5Ljg2NDM4IDcuMTg5NDYgOS42ODA0TDEyLjI4NjQgOS42ODA0TDExLjM0MjIgMTAuMTA0ODhMMTEuNTQ3OCAxMS4yODYxMzExLjYxNDIgMTMuMjU2MzQwLTQuNDM0MjMgMTMuNDM0MjNLMTIuMzQ5NSAzLjIwNTc5TTExLjM0MjIgMy4xNTY1MUMxMS4yNzk1IDMuMTU2NTFNMTIuODI2MiAzLjUyNDUgMTIuNzg1MiAzLjU2MzA4QzEzLjY0MjA0IDMuNzQ4MDIgMTMuODI0MzQgNC4yNzk4MSAxMy44MjQzNCA0LjI3OTgxTDEyLjM0OTkgMTMuMDM0OEwxMS4yMDY1IDE3LjQzNzlMMTMuMjM2MyAxNy45NTY5TDE0LjE0MyAxNC40NzE2QzE0LjcyOCAxNC42MjM2IDE1LjI5MzMgMTQuNzYzOSAxNS44NDkgMTQuODk3MkwxNC45NDc1IDE4LjM2OTFMMTYuOTc2MyAxOC44ODhMMTcuODgzIDE1LjQwMTdDMjAuODc5MSAxNS45ODY4IDIzLjA3MjUgMTUuNzYxNiAyNC4wMTggMTMuMTE1NEMyNC43NjI2IDExLjAyMTggMjQuMTI0NiA5Ljg0ODQxIDIyLjY4NTIgOS4xMDA2QzIzLjc0MjYgOC45MDA5NyAyNC41MzczIDguMTg2NDcgMjQuODE4MiA2Ljc4NThDMjUuMjExNCA0Ljg2NDQyIDIzLjc2MDQgMy45NTczNCAyMS44OTQ5IDMuNDMwODhMMjEuODk1IDMuNDMwN0wyMi44MDMzIDAgMjAuNzc0NSAtMC41MTkwNDNMMTkuODcxMyAyLjk1MTY5QzE5LjMwNjkgMi44MTA3NSAxOC43MjI1IDIuNjc5NjggMTguMTQxMSAyLjU0NTg0TDE5LjA0ODQgLTAuOTA5MTQ1TDE3LjAxOTYgLTEuNDI4MjFMMTYuMTExMyAyLjA1OTA4QzE1LjY0MjggMS45NTE3OSAxNS4xODQgMS44NDU3MyAxNC43NDQ2IDEuNzMzMDhMMTQuNzU0MyAxLjY5MjYxTDExLjg5NTkgMC45ODQwNjJMMTEuMzQyMiAzLjE1NjUxQzExLjM0MjIgMy4xNTY1MSAxMi44MjYyIDMuNTI0NSAxMi43ODUyIDMuNTYzMDhDMTMuNjQyIDMuNzQ4MDIgMTMuODI0MyA0LjI3OTgxIDEzLjgyNDMgNC4yNzk4MUwxMS44OTY2IDEwLjgxM0wxMC43NTMyIDE1LjIxNjFMMTIuNzgzIDE1LjczNTFMMTMuNjg5NyAxMi4yNDk4QzE0LjI3NDcgMTIuNDAxOCAxNC44NCAxMi41NDIxIDE1LjM5NTcgMTIuNjc1NEwxNC40ODg3IDE2LjE0NjNMMTYuNTE3NSAxNi42NjUzTDE3LjY2MDkgMTEuMjYyMkwxNy42NjA3IDExLjI2MjZDMTkuNDU0NSAxMy45NjY1IDIyLjAxNDcgMTMuNDA1MyAyMi44OTU4IDExLjAxMzRDMjMuNzc2OSA4LjYyMTU0IDIyLjg5OCA3LjAzOTE0IDIxLjA1IDUuOTkxNTVDMjIuNDUyNyA1LjY1OTc1IDIzLjUzNDcgNC45MSAyMy44ODMzIDMuMzc5N0MyNC4zNDYyIDEuMzUyNDMgMjMuMDY4NCAwLjE3ODIyOCAyMS4yNjc0IC0wLjQyMzU5MUwyMS44OTUgMy40MzA3QzIwLjc0MSAzLjA5MzcgMTkuMjU2NyAyLjgwMzkgMTYuNTUzNSA0LjI2OThMMTcuODgzIDEyLjE5OTZaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K',
             provider: 'webln',
             supported: ['bitcoin', 'lightning']
           });
@@ -473,7 +473,12 @@ class SBTCPayWidget {
           onFinish: (authData) => {
             if (authData && authData.userSession) {
               const userData = authData.userSession.loadUserData();
-              resolve(userData.profile.stxAddress.mainnet);
+              // Return the Stacks address for the appropriate network
+              const network = process.env.STACKS_NETWORK || 'testnet';
+              const address = network === 'mainnet' 
+                ? userData.profile.stxAddress.mainnet 
+                : userData.profile.stxAddress.testnet;
+              resolve(address);
             } else {
               reject(new Error('Authentication failed'));
             }
@@ -719,17 +724,21 @@ class SBTCPayWidget {
     this.updateStatus('Processing payment...');
     
     try {
-      // Here you would typically initiate the sBTC transfer
-      // For now, we'll generate a QR code and show payment instructions
-      await this.generateQRCode();
-      
-      // Show QR code
-      const qrContainer = this.container.querySelector('#sbtcpay-qrcode-container');
-      if (qrContainer) {
-        qrContainer.style.display = 'block';
+      // For Stacks wallets, submit the payment transaction directly
+      if (this.connectedWallet.provider === 'stacks-connect' || this.connectedWallet.supported.includes('stacks')) {
+        await this.submitStacksPayment();
+      } else {
+        // For other wallets, generate QR code and show payment instructions
+        await this.generateQRCode();
+        
+        // Show QR code
+        const qrContainer = this.container.querySelector('#sbtcpay-qrcode-container');
+        if (qrContainer) {
+          qrContainer.style.display = 'block';
+        }
+        
+        this.updateStatus('Please complete the payment in your wallet');
       }
-      
-      this.updateStatus('Please complete the payment in your wallet');
       
       // Start polling for payment confirmation
       if (!this.pollingTimer && this.options.enablePolling) {
@@ -919,31 +928,72 @@ class SBTCPayWidget {
   }
   
   /**
-   * Check payment status with backend
+   * Check payment status with backend and Stacks blockchain
    */
   async checkPaymentStatus() {
-    const response = await fetch(
-      `${this.options.baseUrl}/payment-intents/${this.options.paymentIntentId}`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          ...(this.options.apiKey && { 'Authorization': `Bearer ${this.options.apiKey}` })
+    try {
+      // First check with backend
+      const response = await fetch(
+        `${this.options.baseUrl}/payment-intents/${this.options.paymentIntentId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            ...(this.options.apiKey && { 'Authorization': `Bearer ${this.options.apiKey}` })
+          }
+        }
+      );
+      
+      if (!response.ok) {
+        throw new Error(`Failed to check payment status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      // If we have a Stacks transaction ID and the payment isn't confirmed yet, check blockchain status
+      if (this.stacksTxId && (data.status === 'processing' || data.status === 'requires_payment')) {
+        try {
+          // Call backend to check Stacks transaction status
+          const stacksStatusResponse = await fetch(
+            `${this.options.baseUrl}/payment-intents/${this.options.paymentIntentId}/stacks-status`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                ...(this.options.apiKey && { 'Authorization': `Bearer ${this.options.apiKey}` })
+              },
+              body: JSON.stringify({
+                txId: this.stacksTxId
+              })
+            }
+          );
+          
+          if (stacksStatusResponse.ok) {
+            const stacksStatusData = await stacksStatusResponse.json();
+            
+            // If blockchain confirms the transaction, update the payment status
+            if (stacksStatusData.confirmed) {
+              data.status = 'succeeded';
+              data.stacksTxId = this.stacksTxId;
+            } else if (stacksStatusData.failed) {
+              data.status = 'failed';
+            }
+          }
+        } catch (stacksError) {
+          console.warn('Failed to check Stacks transaction status:', stacksError);
+          // Continue with just the backend status
         }
       }
-    );
-    
-    if (!response.ok) {
-      throw new Error(`Failed to check payment status: ${response.status}`);
+      
+      return {
+        confirmed: data.status === 'succeeded',
+        failed: data.status === 'failed' || data.status === 'cancelled',
+        pending: data.status === 'requires_payment' || data.status === 'processing',
+        data: data
+      };
+    } catch (error) {
+      console.error('Error checking payment status:', error);
+      throw error;
     }
-    
-    const data = await response.json();
-    
-    return {
-      confirmed: data.status === 'succeeded',
-      failed: data.status === 'failed' || data.status === 'cancelled',
-      pending: data.status === 'requires_payment' || data.status === 'processing',
-      data: data
-    };
   }
   
   /**
@@ -1398,6 +1448,56 @@ class SBTCPayWidget {
     `;
     
     document.head.appendChild(style);
+  }
+
+  /**
+   * Submit payment transaction to Stacks blockchain
+   */
+  async submitStacksPayment() {
+    if (!this.connectedWallet || !this.userAddress) {
+      throw new Error('Please connect a wallet first');
+    }
+    
+    this.updateStatus('Submitting payment to Stacks blockchain...');
+    
+    try {
+      // Submit payment to backend which will handle the Stacks transaction
+      const response = await fetch(
+        `${this.options.baseUrl}/payment-intents/${this.options.paymentIntentId}/submit-stacks-payment`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(this.options.apiKey && { 'Authorization': `Bearer ${this.options.apiKey}` })
+          },
+          body: JSON.stringify({
+            senderAddress: this.userAddress,
+            amount: this.paymentData.amount
+          })
+        }
+      );
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Failed to submit payment: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      this.stacksTxId = result.txId;
+      
+      this.updateStatus(`Payment submitted! Transaction ID: ${this.stacksTxId}`, 'success');
+      
+      // Update the payment data with the transaction ID
+      if (this.paymentData) {
+        this.paymentData.stacksTxId = this.stacksTxId;
+      }
+      
+      return result;
+    } catch (error) {
+      console.error('Stacks payment submission error:', error);
+      this.updateStatus(`Payment failed: ${error.message}`, 'error');
+      throw error;
+    }
   }
 }
 

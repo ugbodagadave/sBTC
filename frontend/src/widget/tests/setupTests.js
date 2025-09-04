@@ -53,3 +53,17 @@ global.QRCode = jest.fn().mockImplementation((element, options) => {
 // Mock setInterval and clearInterval
 global.setInterval = jest.fn();
 global.clearInterval = jest.fn();
+
+// Mock TextEncoder for QR code library
+global.TextEncoder = class {
+  encode(string) {
+    return new Uint8Array(string.split('').map(char => char.charCodeAt(0)));
+  }
+};
+
+// Mock TextDecoder for QR code library
+global.TextDecoder = class {
+  decode(buffer) {
+    return String.fromCharCode.apply(null, new Uint8Array(buffer));
+  }
+};

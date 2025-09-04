@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sBTCPay Stacks Payment Example</title>
+    <style>
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .example-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-left: 4px solid #3498db;
+            background-color: #f8f9fa;
+        }
+        
+        .example-section h2 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        
+        code {
+            background-color: #f1f2f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        pre {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            font-size: 16px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .button:hover {
+            background-color: #2980b9;
+        }
+        
+        .widget-container {
+            margin-top: 30px;
+            border: 1px dashed #bdc3c7;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+        }
+        
+        .instructions {
+            background-color: #e8f4fc;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            border-radius: 0 4px 4px 0;
+            margin: 20px 0;
+        }
+        
+        .feature-list {
+            padding-left: 20px;
+        }
+        
+        .feature-list li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>sBTCPay Stacks Payment Integration</h1>
+        
+        <div class="example-section">
+            <h2>Overview</h2>
+            <p>This example demonstrates how to integrate sBTC payments with the Stacks blockchain using the sBTCPay widget. The widget provides seamless integration with Stacks-compatible wallets for direct blockchain transactions.</p>
+            
+            <div class="instructions">
+                <strong>How it works:</strong>
+                <ol>
+                    <li>User connects their Stacks wallet (e.g., Leather Wallet)</li>
+                    <li>Payment details are sent to the sBTCPay backend</li>
+                    <li>A transaction is created on the Stacks blockchain</li>
+                    <li>The widget monitors transaction confirmation</li>
+                    <li>Payment is marked as complete in the sBTCPay system</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <h2>Key Features</h2>
+            <ul class="feature-list">
+                <li><strong>Stacks Wallet Integration</strong> - Connect directly with Stacks-compatible wallets</li>
+                <li><strong>Smart Contract Payments</strong> - Payments are processed through the payment-processor smart contract</li>
+                <li><strong>Real-time Transaction Monitoring</strong> - Track payment status on the blockchain</li>
+                <li><strong>Fallback Options</strong> - QR code payment for non-Stacks wallets</li>
+                <li><strong>Responsive Design</strong> - Works on desktop and mobile devices</li>
+            </ul>
+        </div>
+        
+        <div class="example-section">
+            <h2>Basic Implementation</h2>
+            <p>To integrate the sBTCPay widget with Stacks payments, include the widget script and initialize it with your payment intent:</p>
+            
+            <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;sBTCPay Stacks Payment&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- Container for the payment widget --&gt;
+    &lt;div id="sbtcpay-widget"&gt;&lt;/div&gt;
+
+    &lt;!-- Include the widget script --&gt;
+    &lt;script src="https://unpkg.com/@sbtcpay/widget/dist/widget.min.js"&gt;&lt;/script&gt;
+    
+    &lt;script&gt;
+        // Initialize the widget
+        document.addEventListener('DOMContentLoaded', function() {
+            new SBTCPayWidget({
+                apiKey: 'your_api_key_here',
+                paymentIntentId: 'your_payment_intent_id',
+                container: '#sbtcpay-widget',
+                theme: {
+                    primaryColor: '#3498db',
+                    backgroundColor: '#ffffff'
+                },
+                onSuccess: function(paymentData) {
+                    console.log('Payment successful!', paymentData);
+                    alert('Payment completed successfully!');
+                },
+                onFailure: function(error) {
+                    console.error('Payment failed!', error);
+                    alert('Payment failed: ' + error.message);
+                }
+            });
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+        </div>
+        
+        <div class="example-section">
+            <h2>Try It Out</h2>
+            <p>Click the button below to see the widget in action. You'll need to have a Stacks-compatible wallet installed (like Leather Wallet) to test the full functionality.</p>
+            
+            <button class="button" onclick="initializeWidget()">Initialize Payment Widget</button>
+            
+            <div id="sbtcpay-widget" class="widget-container">
+                <p>Payment widget will appear here</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include the widget script -->
+    <script src="../dist/widget.min.js"></script>
+    
+    <script>
+        function initializeWidget() {
+            // Clear the container
+            document.getElementById('sbtcpay-widget').innerHTML = '';
+            
+            // Initialize the widget with mock data for demonstration
+            new SBTCPayWidget({
+                // In a real implementation, you would use actual API keys and payment intent IDs
+                apiKey: 'demo_api_key',
+                paymentIntentId: 'demo_payment_intent',
+                container: '#sbtcpay-widget',
+                theme: {
+                    primaryColor: '#3498db',
+                    backgroundColor: '#ffffff'
+                },
+                onSuccess: function(paymentData) {
+                    alert('Payment completed successfully!');
+                    console.log('Payment successful:', paymentData);
+                },
+                onFailure: function(error) {
+                    alert('Payment failed: ' + error.message);
+                    console.error('Payment failed:', error);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
