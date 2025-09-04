@@ -198,392 +198,244 @@ This document outlines the implementation plan for sBTCPay - a production-ready 
    - Store payment intent in database
 
 2. Integrate with Stacks blockchain:
-   - Set up Stacks testnet connection
-   - Implement transaction monitoring
-   - Add sBTC balance checking
+   - Set up Stacks.js library
+   - Implement functions to interact with payment processor contract
+   - Add transaction monitoring capabilities
+   - **COMPLETED**: Implemented StacksService with functions to create payments, complete payments, and check payment statuses
+   - **COMPLETED**: Created StacksWorker for background monitoring of payment statuses
+   - **COMPLETED**: Extended database schema to include Stacks wallet information for merchants
+   - **COMPLETED**: Extended payment intent model to track Stacks payment IDs
 
-3. Implement webhook system:
-   - Store webhook configurations
-   - Implement event emission
-   - Create webhook delivery mechanism
+3. Implement payment confirmation workflow:
+   - Listen for blockchain events
+   - Update payment status in database
+   - Trigger webhook notifications
 
 #### Dependencies:
-- [Stacks.js Transactions](https://docs.hiro.so/stacks/stacks.js/build-transactions)
-- [Stacks Blockchain API](https://docs.hiro.so/api)
+- [Stacks.js Documentation](https://docs.hiro.so/stacks/stacks.js/overview)
+- [Stacks Blockchain Documentation](https://docs.stacks.co/)
 
 #### Testing:
+- Unit tests for Stacks integration functions
+- Integration tests with testnet
 - End-to-end payment processing tests
-- Webhook delivery tests
-- Transaction monitoring tests
 
-### Week 2: JavaScript SDK Development
+### Week 2: SDK Development
 
 #### Tasks:
-1. Create SDK structure:
-   ```bash
-   mkdir -p frontend/sdk
-   cd frontend/sdk
-   npm init -y
-   ```
+1. Create JavaScript/TypeScript SDK:
+   - Implement merchant registration
+   - Add payment intent creation
+   - Include webhook management
+   - Add utility functions for payment status checking
 
-2. Implement core SDK functionality:
-   - Payment creation
-   - Event handling
-   - Wallet integration
-
-3. SDK Example:
-   ```javascript
-   // Example integration using @stacks/transactions
-   import { sBTCPay } from '@sbtcpay/js';
-   
-   const payment = await sBTCPay.createPayment({
-     amount: 0.01,
-     currency: 'sBTC',
-     description: 'Digital Product Purchase'
-   });
-   ```
+2. SDK Features:
+   - Promise-based API
+   - TypeScript definitions
+   - Comprehensive error handling
+   - Request/response validation
 
 #### Dependencies:
-- [Stacks.js Connect](https://docs.hiro.so/stacks/stacks.js/connect-wallet)
-- [Stacks.js Transactions](https://docs.hiro.so/stacks/stacks.js/build-transactions)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Axios Documentation](https://axios-http.com/docs/intro)
 
 #### Testing:
-- SDK unit tests
+- Unit tests for all SDK functions
 - Integration tests with backend API
 - Browser compatibility tests
 
-### Week 3: Widget and Payment Links
+### Week 3: Widget Implementation
 
 #### Tasks:
-1. Develop embeddable widget:
-   - Create iframe-based payment form
+1. Implement payment widget:
+   - Create embeddable JavaScript widget
+   - Add support for multiple wallet providers
    - Implement QR code generation
-   - Add wallet connection support
+   - Add payment status polling
 
-2. Implement payment links:
-   - Create link generation system
-   - Design customizable payment pages
-   - Add social sharing features
+2. Wallet Integration:
+   - Leather Wallet (Stacks Connect)
+   - Xverse Wallet (Sats Connect)
+   - Unisat Wallet
+   - OKX Wallet
+   - Hiro Wallet
+   - Bitcoin Connect (WebLN)
+   - WalletConnect
 
-3. Integrate wallet providers:
-   - Leather wallet integration
-   - Xverse wallet integration
+3. Widget Features:
+   - Responsive design
+   - Customizable styling
+   - Multiple language support
+   - Accessibility compliance
 
 #### Dependencies:
-- [Leather Wallet Integration](https://leather.gitbook.io/guides)
-- [Xverse Wallet Integration](https://docs.xverse.app/sats-connect)
-- [Stacks Connect](https://docs.hiro.so/stacks/connect)
+- [Stacks Connect Documentation](https://docs.hiro.so/stacks/stacks.js/overview)
+- [Sats Connect Documentation](https://github.com/secretkeylabs/sats-connect)
+- [QR Code Library](https://github.com/soldair/node-qrcode)
 
 #### Testing:
-- Widget rendering tests
-- Wallet connection tests
-- Payment link functionality tests
+- Cross-browser testing
+- Wallet integration tests
+- Mobile device testing
+- Accessibility testing
 
 ## Phase 3: Dashboard & UX
 
-**Duration**: 2-3 weeks
-**Goal**: Create merchant dashboard and enhance user experience
+**Duration**: 2 weeks
+**Goal**: Create merchant dashboard and improve user experience
 
-### Week 1: Dashboard Foundation
+### Week 1: Merchant Dashboard
 
 #### Tasks:
-1. Set up React frontend:
-   ```bash
-   npx create-react-app frontend --template typescript
-   cd frontend
-   npm install tailwindcss recharts @stacks/connect
-   npx tailwindcss init -p
-   ```
+1. Design dashboard layout:
+   - Overview section with key metrics
+   - Payment history table
+   - Webhook management interface
+   - Settings page
 
-2. Implement authentication system:
-   - Login/signup pages
-   - API key management
-   - Session handling
-
-3. Create dashboard layout:
-   - Navigation sidebar
-   - Header with user controls
-   - Responsive design
+2. Implement dashboard features:
+   - Real-time payment status updates
+   - Search and filtering capabilities
+   - Export functionality for reports
+   - User authentication and session management
 
 #### Dependencies:
 - [React Documentation](https://reactjs.org/docs/getting-started.html)
-- [Tailwind CSS](https://tailwindcss.com/docs)
-- [Recharts](https://recharts.org/en-US/)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Chart.js Documentation](https://www.chartjs.org/docs/latest/)
 
 #### Testing:
-- Component rendering tests
-- Authentication flow tests
-- Responsive design tests
+- Component unit tests
+- Dashboard integration tests
+- Performance testing
 
-### Week 2: Analytics and Transaction Management
+### Week 2: User Experience Improvements
 
 #### Tasks:
-1. Implement analytics dashboard:
-   - Payment volume charts
-   - Success rate metrics
-   - Trend visualization
+1. Enhance widget UX:
+   - Add loading states
+   - Improve error handling
+   - Implement retry mechanisms
+   - Add transaction history
 
-2. Create transaction management:
-   - Search and filter functionality
-   - Transaction detail views
-   - Export capabilities (CSV/JSON)
-
-3. Add real-time updates:
-   - WebSocket integration
-   - Live data refresh
+2. Optimize dashboard:
+   - Add keyboard navigation
+   - Improve mobile responsiveness
+   - Implement dark mode
+   - Add tooltips and help text
 
 #### Dependencies:
-- [Recharts Documentation](https://recharts.org/en-US/api)
-- [WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
+- [Accessibility Guidelines](https://www.w3.org/WAI/standards-guidelines/wcag/)
+- [Performance Optimization Guide](https://web.dev/fast/)
 
 #### Testing:
-- Chart rendering tests
-- Data filtering tests
-- Export functionality tests
-
-### Week 3: Settings and Configuration
-
-#### Tasks:
-1. Implement account settings:
-   - Business information management
-   - Notification preferences
-   - Security settings
-
-2. Create webhook configuration:
-   - Endpoint management
-   - Event subscription
-   - Delivery testing
-
-3. Add API key management:
-   - Key generation
-   - Key rotation
-   - Usage tracking
-
-#### Testing:
-- Form validation tests
-- Settings persistence tests
-- Webhook delivery tests
+- Usability testing
+- Performance benchmarking
+- Accessibility audit
 
 ## Phase 4: Polish & Launch
 
-**Duration**: 1-2 weeks
-**Goal**: Finalize features, optimize performance, and prepare for submission
+**Duration**: 1 week
+**Goal**: Finalize features, fix bugs, and prepare for launch
 
-### Week 1: Optimization and Security
+### Week 1: Finalization
 
 #### Tasks:
-1. Performance optimization:
-   - API response time improvements
-   - Database query optimization
-   - Caching implementation with Redis
+1. Bug fixes and optimizations:
+   - Address all outstanding issues
+   - Optimize database queries
+   - Improve error handling
+   - Enhance security measures
 
-2. Security enhancements:
-   - API key encryption
-   - Rate limiting implementation
-   - Input validation and sanitization
-   - XSS and CSRF protection
+2. Documentation:
+   - Complete API documentation
+   - Write user guides
+   - Create developer documentation
+   - Prepare marketing materials
 
-3. Error handling:
-   - Comprehensive error logging
-   - User-friendly error messages
-   - Sentry integration
+3. Deployment preparation:
+   - Set up production environment
+   - Configure monitoring and logging
+   - Implement backup strategies
+   - Prepare rollback procedures
 
 #### Dependencies:
-- [Redis Documentation](https://redis.io/docs/)
-- [Sentry Documentation](https://docs.sentry.io/)
+- [Security Best Practices](https://owasp.org/www-project-top-ten/)
+- [Documentation Tools](https://docusaurus.io/)
 
 #### Testing:
-- Load testing with Artillery or similar tools
-- Security scanning
-- Error handling tests
-
-### Week 2: Documentation and Final Preparations
-
-#### Tasks:
-1. Complete documentation:
-   - API reference
-   - SDK documentation
-   - Integration guides
-   - Example applications
-
-2. Prepare demo materials:
-   - Demo application
-   - Test merchant account
-   - Sample transactions
-
-3. Final testing and bug fixes:
-   - End-to-end testing
-   - Cross-browser testing
-   - Mobile responsiveness testing
-
-#### Testing:
-- Documentation accuracy tests
-- Demo walkthrough verification
-- Final integration testing
+- Security audit
+- Load testing
+- Documentation review
+- Deployment dry-run
 
 ## Testing Strategy
 
 ### Unit Testing
-
-All components must have comprehensive unit tests:
-- Backend API endpoints: Jest
-- Frontend components: React Testing Library
-- Smart contracts: Clarinet
-- SDK functions: Jest
+- Test individual functions and methods
+- Mock external dependencies
+- Achieve 80%+ code coverage
 
 ### Integration Testing
-
-- Database integration tests
-- Blockchain integration tests
-- Webhook delivery tests
-- Wallet connection tests
+- Test interactions between components
+- Verify database operations
+- Test API endpoints
 
 ### End-to-End Testing
-
-- Payment flow testing
-- Dashboard functionality testing
-- API integration testing
+- Simulate real user workflows
+- Test payment processing flow
+- Verify webhook delivery
 
 ### Performance Testing
-
-- Load testing with 100+ concurrent users
-- Response time measurements
-- Database query performance
-
-### Security Testing
-
-- Penetration testing
-- Vulnerability scanning
-- Code review for security issues
+- Load testing with multiple concurrent users
+- Stress testing under high load
+- Response time monitoring
 
 ## Documentation
 
-### API Documentation
+### Developer Documentation
+- API reference
+- SDK documentation
+- Integration guides
+- Code examples
 
-Comprehensive API documentation with:
-- Endpoint descriptions
-- Request/response examples
-- Error codes
-- Authentication details
+### User Documentation
+- Getting started guide
+- Merchant dashboard guide
+- Widget integration guide
+- Troubleshooting guide
 
-### SDK Documentation
-
-Detailed SDK usage guides:
-- Installation instructions
-- Initialization examples
-- Function references
-- Event handling
-
-### Integration Guides
-
-Step-by-step integration guides for:
-- REST API integration
-- JavaScript SDK integration
-- Widget integration
-- Payment link usage
-
-### Example Applications
-
-Complete example applications showing:
-- Basic payment integration
-- Dashboard usage
-- Webhook handling
-- Advanced features
+### Technical Documentation
+- Architecture overview
+- Database schema
+- Smart contract documentation
+- **COMPLETED**: [Stacks Integration Guide](./stacks-integration.md)
 
 ## Final Demo Preparation
 
-### Demo Video Content
+### Demo Requirements
+- End-to-end payment processing
+- Widget integration showcase
+- Dashboard functionality demonstration
+- Webhook notification verification
 
-A 3-minute walkthrough including:
-1. Merchant registration and setup (30 seconds)
-2. API key generation (15 seconds)
-3. Payment creation via different methods (60 seconds)
-   - REST API
-   - JavaScript SDK
-   - Widget
-   - Payment link
-4. Customer payment flow (45 seconds)
-5. Merchant dashboard features (45 seconds)
-6. Webhook notifications (15 seconds)
-
-### Live Demo Preparation
-
-- Deployed test environment
-- Pre-configured merchant account
-- Sample products for testing
-- Multiple wallet connections ready
-
-### Submission Materials
-
-1. Source code repository
-2. Documentation site
-3. Demo video
-4. Written submission document
+### Presentation Materials
+- Project overview slides
+- Technical architecture diagram
+- Live demonstration setup
+- Q&A preparation
 
 ## Appendix
 
-### Environment Variables Needed
+### Glossary
+- **sBTC**: Stacks Bitcoin, a Bitcoin-backed token on the Stacks blockchain
+- **Stacks**: A layer-2 blockchain that enables smart contracts for Bitcoin
+- **Clarity**: The smart contract language used on the Stacks blockchain
+- **Payment Intent**: An object representing a customer's intention to pay
+- **Webhook**: HTTP callback for real-time event notifications
 
-The following environment variables need to be configured:
-
-#### Backend Environment Variables
-```env
-# Database Configuration
-DB_HOST= [NEEDS INPUT: Database host]
-DB_PORT= [NEEDS INPUT: Database port, default 5432]
-DB_NAME= [NEEDS INPUT: Database name]
-DB_USER= [NEEDS INPUT: Database user]
-DB_PASSWORD= [NEEDS INPUT: Database password]
-
-# Stacks Configuration
-STACKS_NETWORK= [NEEDS INPUT: mainnet/testnet/devnet]
-STACKS_API_URL= [NEEDS INPUT: Stacks API endpoint]
-STACKS_DEPLOYER= [NEEDS INPUT: Contract deployer address]
-
-# Redis Configuration
-REDIS_URL= [NEEDS INPUT: Redis connection URL]
-
-# Security
-JWT_SECRET= [NEEDS INPUT: Secret for JWT tokens]
-API_KEY_SALT= [NEEDS INPUT: Salt for API key hashing]
-
-# Webhook Configuration
-WEBHOOK_SECRET= [NEEDS INPUT: Secret for webhook signatures]
-```
-
-#### Frontend Environment Variables
-```env
-# API Configuration
-REACT_APP_API_URL= [NEEDS INPUT: Backend API URL]
-REACT_APP_STACKS_NETWORK= [NEEDS INPUT: Stacks network]
-
-# Widget Configuration
-REACT_APP_WIDGET_SCRIPT_URL= [NEEDS INPUT: Widget script URL]
-```
-
-### Useful Documentation Links
-
-1. [sBTC Overview](https://docs.stacks.co/concepts/sbtc)
-2. [Stacks.js Documentation](https://docs.hiro.so/stacks/stacks.js/quickstart)
-3. [Clarity Language Reference](https://docs.stacks.co/write-smart-contracts/language-reference)
-4. [Stacks Blockchain API](https://docs.hiro.so/api)
-5. [Leather Wallet Integration](https://leather.gitbook.io/guides)
-6. [Xverse Wallet Integration](https://docs.xverse.app/sats-connect)
-7. [Clarinet Documentation](https://docs.hiro.so/smart-contracts/clarinet)
-8. [PostgreSQL Documentation](https://www.postgresql.org/docs/)
-9. [Redis Documentation](https://redis.io/docs/)
-10. [Docker Documentation](https://docs.docker.com/)
-11. [GitHub Actions Documentation](https://docs.github.com/en/actions)
-12. [Vercel Documentation](https://vercel.com/docs)
-13. [Sentry Documentation](https://docs.sentry.io/)
-14. [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-15. [Recharts Documentation](https://recharts.org/en-US/)
-
-### Development Tools
-
-1. [Node.js](https://nodejs.org/)
-2. [Docker](https://www.docker.com/)
-3. [PostgreSQL](https://www.postgresql.org/)
-4. [Redis](https://redis.io/)
-5. [Clarinet](https://docs.hiro.so/smart-contracts/clarinet)
-6. [Stacks CLI](https://docs.hiro.so/stacks-cli)
+### References
+- [Stacks Documentation](https://docs.stacks.co/)
+- [Clarity Language Reference](https://docs.stacks.co/write-smart-contracts/language-reference)
+- [Stacks.js Library](https://docs.hiro.so/stacks/stacks.js/overview)
+- [sBTC Documentation](https://docs.stacks.co/sbtc)

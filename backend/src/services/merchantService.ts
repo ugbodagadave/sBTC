@@ -16,15 +16,17 @@ export class MerchantService {
     const hashedPassword = await bcrypt.hash(input.password, SALT_ROUNDS);
     
     const query = `
-      INSERT INTO merchants (email, api_key_hash, business_name)
-      VALUES ($1, $2, $3)
-      RETURNING id, email, api_key_hash, created_at, business_name
+      INSERT INTO merchants (email, api_key_hash, business_name, stacks_address, stacks_private_key)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING id, email, api_key_hash, created_at, business_name, stacks_address, stacks_private_key
     `;
     
     const values = [
       input.email,
       hashedPassword,
-      input.businessName
+      input.businessName,
+      input.stacksAddress,
+      input.stacksPrivateKey
     ];
     
     const result = await pool.query(query, values);
@@ -35,7 +37,9 @@ export class MerchantService {
       email: row.email,
       apiKeyHash: row.api_key_hash,
       createdAt: row.created_at,
-      businessName: row.business_name
+      businessName: row.business_name,
+      stacksAddress: row.stacks_address,
+      stacksPrivateKey: row.stacks_private_key
     };
   }
   
@@ -58,7 +62,9 @@ export class MerchantService {
       email: row.email,
       apiKeyHash: row.api_key_hash,
       createdAt: row.created_at,
-      businessName: row.business_name
+      businessName: row.business_name,
+      stacksAddress: row.stacks_address,
+      stacksPrivateKey: row.stacks_private_key
     };
   }
   
@@ -81,7 +87,9 @@ export class MerchantService {
       email: row.email,
       apiKeyHash: row.api_key_hash,
       createdAt: row.created_at,
-      businessName: row.business_name
+      businessName: row.business_name,
+      stacksAddress: row.stacks_address,
+      stacksPrivateKey: row.stacks_private_key
     };
   }
   

@@ -12,7 +12,9 @@ async function initDatabase() {
         email VARCHAR(255) UNIQUE NOT NULL,
         api_key_hash VARCHAR(255) NOT NULL,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        business_name VARCHAR(255)
+        business_name VARCHAR(255),
+        stacks_address VARCHAR(255),
+        stacks_private_key VARCHAR(255)
       )
     `);
     
@@ -24,6 +26,7 @@ async function initDatabase() {
         amount DECIMAL(18,8) NOT NULL,
         status VARCHAR(50) NOT NULL DEFAULT 'requires_payment',
         stacks_tx_id VARCHAR(255),
+        stacks_payment_id BIGINT,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         confirmed_at TIMESTAMP WITH TIME ZONE
       )

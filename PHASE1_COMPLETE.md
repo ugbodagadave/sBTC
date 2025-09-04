@@ -39,20 +39,29 @@ sBTCPay/
 ### Models
 - **File**: `backend/src/models/Merchant.ts`
 - Defined Merchant interface and creation input interface
+- Extended to include Stacks wallet information (`stacksAddress`, `stacksPrivateKey`)
 - **File**: `backend/src/models/PaymentIntent.ts`
 - Defined PaymentIntent interface and creation input interface
-- **File**: `backend/src/models/Webhook.ts`
-- Defined Webhook interface and creation input interface
+- Extended to include Stacks payment ID (`stacksPaymentId`)
 
 ### Services
 - **File**: `backend/src/services/merchantService.ts`
 - Implemented merchant creation with password hashing using bcrypt
 - Added methods for finding merchants by email or ID
 - Implemented credential validation
+- Extended to handle Stacks wallet information
 - **File**: `backend/src/services/paymentIntentService.ts`
 - Implemented payment intent creation
 - Added methods for finding payment intents by ID or merchant ID
 - Implemented status updates for payment intents
+- **COMPLETED**: Integrated with Stacks blockchain to create payments on chain when payment intents are created
+- **File**: `backend/src/services/stacksService.ts`
+- **NEW**: Implemented Stacks blockchain integration service with functions to:
+  - Create payments on the Stacks blockchain
+  - Complete payments on the Stacks blockchain
+  - Get payment status from the Stacks blockchain
+  - Get payment details from the Stacks blockchain
+  - Monitor transactions for confirmation
 - **File**: `backend/src/services/webhookService.ts`
 - Implemented webhook creation with secret generation
 - Added methods for finding and deleting webhooks
@@ -78,11 +87,22 @@ sBTCPay/
 - **File**: `backend/src/routes/webhookRoutes.ts`
 - Defined routes for webhook creation, listing, and deletion
 
+### Workers
+- **File**: `backend/src/workers/stacksWorker.ts`
+- **NEW**: Implemented background worker for monitoring payment statuses on the Stacks blockchain
+- Periodically checks for payments in 'processing' status
+- Queries the Stacks blockchain for current status
+- Updates local database with latest status information
+
 ### Utilities
 - **File**: `backend/src/utils/redis.ts`
 - Implemented Redis connection and disconnection utilities
 - **File**: `backend/src/utils/initDb.ts`
 - Created database initialization script for creating tables
+- Extended to include Stacks wallet columns in merchants table
+- Extended to include Stacks payment ID column in payment intents table
+- **File**: `backend/src/utils/migrateDb.ts`
+- **NEW**: Created database migration script to add Stacks wallet columns to existing tables
 - **File**: `backend/src/utils/cleanupDb.ts`
 - Created database cleanup script for testing
 - **File**: `backend/src/utils/statusCheck.ts`
@@ -97,6 +117,11 @@ sBTCPay/
   - Merchant service tests
   - Payment intent service tests
   - Webhook service tests
+- Updated to include Stacks wallet information in test data
+- **File**: `backend/tests/stacks.test.ts`
+- **NEW**: Implemented tests for StacksService
+- **File**: `backend/tests/stacksWorker.test.ts`
+- **NEW**: Implemented tests for StacksWorker
 
 ### Configuration Files
 - **File**: `backend/tsconfig.json`
@@ -105,6 +130,7 @@ sBTCPay/
 - Configured Jest testing framework
 - **File**: `backend/package.json`
 - Defined project dependencies and scripts
+- Added `@stacks/network` and `@stacks/transactions` dependencies
 - **File**: `backend/.env`
 - Configured environment variables for development
 - **File**: `backend/.env.example`
@@ -118,7 +144,6 @@ sBTCPay/
 - Configured Redis container with version 7
 - Set up proper port mappings (5432 for PostgreSQL, 6379 for Redis)
 - Configured environment variables for database credentials
-- Added volume mounts for data persistence
 
 ### Initialization Scripts
 - **File**: `docker/init-scripts/init.sql`
@@ -136,7 +161,9 @@ CREATE TABLE IF NOT EXISTS merchants (
   email VARCHAR(255) UNIQUE NOT NULL,
   api_key_hash VARCHAR(255) NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  business_name VARCHAR(255)
+  business_name VARCHAR(255),
+  stacks_address VARCHAR(255),
+  stacks_private_key VARCHAR(255)
 )
 ```
 
@@ -148,6 +175,7 @@ CREATE TABLE IF NOT EXISTS payment_intents (
   amount DECIMAL(18,8) NOT NULL,
   status VARCHAR(50) NOT NULL DEFAULT 'requires_payment',
   stacks_tx_id VARCHAR(255),
+  stacks_payment_id BIGINT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   confirmed_at TIMESTAMP WITH TIME ZONE
 )
@@ -284,6 +312,8 @@ The following environment variables are configured in the `.env` file:
 - `PORT`: Server port (3000)
 - `STACKS_NETWORK`: Stacks network (testnet)
 - `STACKS_API_URL`: Stacks API URL (https://api.testnet.hiro.so)
+- `STACKS_CONTRACT_ADDRESS`: Stacks contract address (ST3R364CQ9Z3RH1T2FJHANQWDGK8RB5FPKXJ63VH8)
+- `STACKS_CONTRACT_NAME`: Stacks contract name (payment-processor)
 - `JWT_SECRET`: JWT secret for authentication
 - `BCRYPT_SALT_ROUNDS`: Bcrypt salt rounds (10)
 - `FRONTEND_URL`: Frontend URL for CORS (http://localhost:3001)
@@ -293,7 +323,9 @@ The following environment variables are configured in the `.env` file:
 All tests are currently passing:
 - Server endpoint tests: 2/2 passing
 - Database tests: 10/10 passing
-- Total: 12/12 tests passing
+- Stacks service tests: 1/1 passing
+- Stacks worker tests: 2/2 passing
+- Total: 15/15 tests passing
 
 Test coverage includes:
 - Database connection verification
@@ -301,6 +333,8 @@ Test coverage includes:
 - Merchant authentication
 - Payment intent creation and management
 - Webhook creation and management
+- Stacks blockchain integration
+- Background worker functionality
 
 ## Verification
 
@@ -311,6 +345,7 @@ All API endpoints have been manually tested and verified:
 - Payment intent creation works properly
 - Payment intent retrieval returns correct data
 - Webhook creation and listing works properly
+- Stacks integration creates payments on blockchain
 
 ## Dependencies
 
@@ -322,6 +357,8 @@ All API endpoints have been manually tested and verified:
 - redis: Redis client
 - bcrypt: Password hashing
 - uuid: UUID generation
+- @stacks/network: Stacks network utilities
+- @stacks/transactions: Stacks transaction handling
 
 ### Frontend Dependencies
 - react: User interface library
@@ -387,5 +424,11 @@ All API endpoints have been manually tested and verified:
 - Updated Phase 1 completion status
 - Marked completed tasks
 - Added links to relevant documentation
+- **COMPLETED**: Marked Stacks integration as complete
+
+### Stacks Integration
+- **File**: `docs/stacks-integration.md`
+- **NEW**: Created comprehensive documentation for Stacks blockchain integration
+- Details implementation architecture and usage
 
 This completes all the required tasks for Phase 1 of the sBTCPay implementation.

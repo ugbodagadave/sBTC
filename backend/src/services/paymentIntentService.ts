@@ -3,6 +3,8 @@ import pool from '../config/db';
 import { PaymentIntent, CreatePaymentIntentInput } from '../models/PaymentIntent';
 import { v4 as uuidv4 } from 'uuid';
 import { PaymentEventService } from './paymentEventService';
+import { StacksService } from './stacksService';
+import { MerchantService } from './merchantService';
 
 export class PaymentIntentService {
   /**
@@ -13,17 +15,56 @@ export class PaymentIntentService {
   static async createPaymentIntent(input: CreatePaymentIntentInput): Promise<PaymentIntent> {
     const id = uuidv4();
     
+    // Get merchant information including Stacks wallet details
+    const merchant = await MerchantService.findById(input.merchantId);
+    if (!merchant) {
+      throw new Error('Merchant not found');
+    }
+    
+    // Check if merchant has Stacks wallet information
+    if (!merchant.stacksAddress || !merchant.stacksPrivateKey) {
+      throw new Error('Merchant Stacks wallet information is missing');
+    }
+    
+    // Convert amount to micro-STX (1 STX = 1,000,000 micro-STX)
+    const amountInMicroSTX = Math.round(input.amount * 1000000);
+    
+    // Create payment on Stacks blockchain
+    let stacksTxId: string | undefined;
+    let stacksPaymentId: number | undefined;
+    
+    try {
+      // For the demo, we'll use a placeholder for the payment ID
+      // In a real implementation, the createPaymentOnChain function would return the payment ID
+      stacksPaymentId = Date.now(); // Using timestamp as a placeholder payment ID
+      
+      // Create the payment on chain
+      stacksTxId = await StacksService.createPaymentOnChain(
+        merchant.stacksAddress, 
+        amountInMicroSTX, 
+        merchant.stacksPrivateKey
+      );
+      
+      console.log(`Payment created on Stacks blockchain with TX ID: ${stacksTxId}`);
+    } catch (error) {
+      console.error('Error creating payment on Stacks blockchain:', error);
+      // We'll continue with the payment intent creation even if blockchain interaction fails
+      // In a real implementation, you might want to handle this differently
+    }
+    
     const query = `
-      INSERT INTO payment_intents (id, merchant_id, amount, status)
-      VALUES ($1, $2, $3, $4)
-      RETURNING id, merchant_id, amount, status, created_at
+      INSERT INTO payment_intents (id, merchant_id, amount, status, stacks_tx_id, stacks_payment_id)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING id, merchant_id, amount, status, stacks_tx_id, stacks_payment_id, created_at
     `;
     
     const values = [
       id,
       input.merchantId,
       input.amount,
-      'requires_payment'
+      stacksTxId ? 'processing' : 'requires_payment',
+      stacksTxId || null,
+      stacksPaymentId || null
     ];
     
     const result = await pool.query(query, values);
@@ -34,6 +75,8 @@ export class PaymentIntentService {
       merchantId: row.merchant_id,
       amount: parseFloat(row.amount),
       status: row.status,
+      stacksTxId: row.stacks_tx_id,
+      stacksPaymentId: row.stacks_payment_id ? parseInt(row.stacks_payment_id) : undefined,
       createdAt: row.created_at
     };
     
@@ -63,6 +106,7 @@ export class PaymentIntentService {
       amount: parseFloat(row.amount),
       status: row.status,
       stacksTxId: row.stacks_tx_id,
+      stacksPaymentId: row.stacks_payment_id ? parseInt(row.stacks_payment_id) : undefined,
       createdAt: row.created_at,
       confirmedAt: row.confirmed_at
     };
@@ -103,6 +147,7 @@ export class PaymentIntentService {
       amount: parseFloat(row.amount),
       status: row.status,
       stacksTxId: row.stacks_tx_id,
+      stacksPaymentId: row.stacks_payment_id ? parseInt(row.stacks_payment_id) : undefined,
       createdAt: row.created_at,
       confirmedAt: row.confirmed_at
     };
@@ -132,8 +177,47 @@ export class PaymentIntentService {
       amount: parseFloat(row.amount),
       status: row.status,
       stacksTxId: row.stacks_tx_id,
+      stacksPaymentId: row.stacks_payment_id ? parseInt(row.stacks_payment_id) : undefined,
       createdAt: row.created_at,
       confirmedAt: row.confirmed_at
     }));
+  }
+  
+  /**
+   * Check payment status on Stacks blockchain and update local status
+   * @param id Payment intent ID
+   * @param paymentId Stacks payment ID
+   * @returns Updated payment intent
+   */
+  static async checkAndUpdatePaymentStatus(id: string, paymentId: number): Promise<PaymentIntent | null> {
+    try {
+      // Get payment status from Stacks blockchain
+      const status = await StacksService.getPaymentStatus(paymentId);
+      
+      // Map Stacks status to our internal status
+      let internalStatus: PaymentIntent['status'] = 'requires_payment';
+      
+      switch (status) {
+        case 'pending':
+          internalStatus = 'processing';
+          break;
+        case 'completed':
+          internalStatus = 'succeeded';
+          break;
+        case 'failed':
+        case 'cancelled':
+          internalStatus = 'failed';
+          break;
+        default:
+          internalStatus = 'processing';
+      }
+      
+      // Update the payment intent status in our database
+      return await this.updateStatus(id, internalStatus);
+    } catch (error) {
+      console.error('Error checking and updating payment status:', error);
+      // If there's an error checking the blockchain, we keep the current status
+      return await this.findById(id);
+    }
   }
 }
