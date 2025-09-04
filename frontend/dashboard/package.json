@@ -23,7 +23,7 @@
     "@babel/preset-env": "^7.28.3",
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.25.9",
-    "@shadcn/ui": "^0.0.4",
+    "@shadcn/ui": "^0.8.0",
     "@types/node": "^22.10.2",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.2",

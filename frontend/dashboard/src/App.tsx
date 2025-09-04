@@ -1,6 +1,6 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import AppSidebar from "@/components/AppSidebar";
 import Dashboard from "@/components/Dashboard";
 import LoginPage from "@/pages/LoginPage";
@@ -11,48 +11,56 @@ import PaymentLinksPage from "@/pages/PaymentLinksPage";
 import SettingsPage from "@/pages/SettingsPage";
 
 const App = () => {
+  const location = useLocation();
+  const showSidebar = location.pathname !== '/login';
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/*" element={
-          <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>
-              <Routes>
-                <Route path="/" element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                } />
-                <Route path="/transactions" element={
-                  <ProtectedRoute>
-                    <TransactionsPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/customers" element={
-                  <ProtectedRoute>
-                    <CustomersPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/payment-links" element={
-                  <ProtectedRoute>
-                    <PaymentLinksPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/settings" element={
-                  <ProtectedRoute>
-                    <SettingsPage />
-                  </ProtectedRoute>
-                } />
-                {/* Add more routes here as we implement other pages */}
-              </Routes>
-            </SidebarInset>
-          </SidebarProvider>
-        } />
-      </Routes>
-    </Router>
+    <div className="flex">
+      {showSidebar && <AppSidebar collapsed={collapsed} setCollapsed={setCollapsed} />}
+      <main className={`flex-1 ${showSidebar && collapsed ? 'ml-16' : showSidebar ? 'ml-72' : ''}`}>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/*" element={
+            <Routes>
+              <Route path="/" element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/transactions" element={
+                <ProtectedRoute>
+                  <TransactionsPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/customers" element={
+                <ProtectedRoute>
+                  <CustomersPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/payment-links" element={
+                <ProtectedRoute>
+                  <PaymentLinksPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/settings" element={
+                <ProtectedRoute>
+                  <SettingsPage />
+                </ProtectedRoute>
+              } />
+              {/* Add more routes here as we implement other pages */}
+            </Routes>
+          } />
+        </Routes>
+      </main>
+    </div>
   );
 };
 
-export default App;
+const AppWrapper = () => (
+  <Router>
+    <App />
+  </Router>
+);
+
+export default AppWrapper;

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,11 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Search, Bell, Menu, HelpCircle, LogOut, PanelLeft } from 'lucide-react';
-import {
-  SidebarTrigger,
-  useSidebar,
-} from '@/components/ui/sidebar';
+import { Search, Bell, Menu, HelpCircle, LogOut } from 'lucide-react';
 
 interface HeaderProps {
   title: string;
@@ -23,7 +20,6 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ title, subtitle }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const { toggleSidebar } = useSidebar();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,9 +29,6 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle }) => {
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-      <Button variant="ghost" size="icon" className="-ml-1 mr-2" onClick={toggleSidebar}>
-        <PanelLeft className="h-5 w-5" />
-      </Button>
       <div className="flex items-center gap-2">
         <h1 className="text-lg font-semibold">{title}</h1>
       </div>
