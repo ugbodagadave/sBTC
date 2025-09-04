@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Home, 
@@ -10,7 +9,8 @@ import {
   LogOut,
   Bell,
   Search,
-  PanelLeft
+  PanelLeft,
+  BarChart3
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,6 +35,11 @@ const navigationItems = [
     title: "Dashboard",
     url: "/",
     icon: Home,
+  },
+  {
+    title: "Analytics",
+    url: "/analytics",
+    icon: BarChart3,
   },
   {
     title: "Transactions",

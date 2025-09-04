@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import AppSidebar from "@/components/AppSidebar";
@@ -9,6 +8,7 @@ import TransactionsPage from "@/pages/TransactionsPage";
 import CustomersPage from "@/pages/CustomersPage";
 import PaymentLinksPage from "@/pages/PaymentLinksPage";
 import SettingsPage from "@/pages/SettingsPage";
+import AnalyticsPage from "@/pages/AnalyticsPage";
 
 const App = () => {
   const location = useLocation();
@@ -46,6 +46,11 @@ const App = () => {
               <Route path="/settings" element={
                 <ProtectedRoute>
                   <SettingsPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/analytics" element={
+                <ProtectedRoute>
+                  <AnalyticsPage />
                 </ProtectedRoute>
               } />
               {/* Add more routes here as we implement other pages */}
