@@ -76,18 +76,19 @@ class StacksWorker {
           console.log(`Checking payment ${paymentIntentId} with Stacks TX ID ${stacksTxId}`);
           
           // Check transaction status on Stacks blockchain
-          // In a real implementation, we would call the Stacks API to get transaction details
-          // For now, we'll simulate this with a placeholder
+          const txStatus = await StacksService.getTransactionStatus(stacksTxId);
           
-          // Simulate checking the transaction status
-          const isConfirmed = Math.random() > 0.5; // 50% chance of confirmation for demo
-          
-          if (isConfirmed) {
+          // Handle different transaction statuses
+          if (txStatus.status === 'success') {
             console.log(`Payment ${paymentIntentId} confirmed on Stacks blockchain`);
             // Update payment status to succeeded
             await PaymentIntentService.updateStatus(paymentIntentId, 'succeeded', stacksTxId);
+          } else if (txStatus.status === 'abort_by_response' || txStatus.status === 'abort_by_post_condition') {
+            console.log(`Payment ${paymentIntentId} failed on Stacks blockchain`);
+            // Update payment status to failed
+            await PaymentIntentService.updateStatus(paymentIntentId, 'failed', stacksTxId);
           } else {
-            console.log(`Payment ${paymentIntentId} still pending on Stacks blockchain`);
+            console.log(`Payment ${paymentIntentId} still pending on Stacks blockchain (status: ${txStatus.status})`);
             // Keep as processing for now
           }
         } catch (error) {

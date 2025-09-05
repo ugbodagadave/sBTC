@@ -23,32 +23,13 @@
   }
 )
 
-;; Define events
-(define-event-type payment-created 
-  { 
-    id: uint,
-    amount: uint,
-    sender: principal,
-    recipient: principal
-  }
-)
-
-(define-event-type payment-completed 
-  { 
-    id: uint,
-    completed-at: uint
-  }
-)
-
 ;; Public function to create a new payment
-(define-public function create-payment
-  (recipient principal)
-  (amount uint)
+(define-public (create-payment (recipient principal) (amount uint))
   (let
     (
       (id (var-get payment-counter))
       (sender tx-sender)
-      (current-time block-height)
+      (current-time burn-block-height)
     )
     (asserts! (> amount u0) ERR-INVALID-AMOUNT)
     
@@ -68,28 +49,18 @@
     ;; Increment the payment counter
     (var-set payment-counter (+ id u1))
     
-    ;; Emit payment created event
-    (event payment-created
-      {
-        id: id,
-        amount: amount,
-        sender: sender,
-        recipient: recipient
-      }
-    )
-    
+    ;; Return the payment ID
     (ok id)
   )
 )
 
 ;; Public function to complete a payment
-(define-public function complete-payment
-  (payment-id uint)
+(define-public (complete-payment (payment-id uint))
   (let
     (
       (payment (unwrap! (map-get? payments { id: payment-id }) ERR-PAYMENT-NOT-FOUND))
       (sender tx-sender)
-      (current-time block-height)
+      (current-time burn-block-height)
     )
     ;; Check if sender is authorized (either the original sender or recipient)
     (asserts! (or (is-eq sender (get sender payment)) (is-eq sender (get recipient payment))) ERR-UNAUTHORIZED)
@@ -108,27 +79,17 @@
       )
     )
     
-    ;; Emit payment completed event
-    (event payment-completed
-      {
-        id: payment-id,
-        completed-at: current-time
-      }
-    )
-    
     (ok true)
   )
 )
 
 ;; Read-only function to get payment details
-(define-read-only function get-payment
-  (payment-id uint)
+(define-read-only (get-payment (payment-id uint))
   (map-get? payments { id: payment-id })
 )
 
 ;; Read-only function to get payment status
-(define-read-only function get-payment-status
-  (payment-id uint)
+(define-read-only (get-payment-status (payment-id uint))
   (let
     (
       (payment (unwrap! (map-get? payments { id: payment-id }) ERR-PAYMENT-NOT-FOUND))

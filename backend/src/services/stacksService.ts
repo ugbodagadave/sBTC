@@ -12,6 +12,7 @@ import {
   ClarityType,
   TxBroadcastResult
 } from '@stacks/transactions';
+import axios from 'axios';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -236,6 +237,33 @@ export class StacksService {
   }
   
   /**
+   * Check transaction status on the Stacks blockchain
+   * @param txId Transaction ID
+   * @returns Transaction status information
+   */
+  static async getTransactionStatus(txId: string): Promise<any> {
+    try {
+      // Remove '0x' prefix if present
+      const cleanTxId = txId.startsWith('0x') ? txId.substring(2) : txId;
+      
+      // Get transaction details from the Stacks API
+      const response = await axios.get(`${STACKS_API_URL}/extended/v1/tx/${cleanTxId}`);
+      
+      return {
+        tx_id: response.data.tx_id,
+        status: response.data.tx_status,
+        confirmations: response.data.confirmations || 0,
+        block_hash: response.data.block_hash,
+        block_height: response.data.block_height,
+        canonical: response.data.canonical
+      };
+    } catch (error) {
+      console.error('Error getting transaction status:', error);
+      throw error;
+    }
+  }
+  
+  /**
    * Monitor a transaction for confirmation
    * @param txId Transaction ID
    * @param maxWaitTime Maximum time to wait in milliseconds (default: 30 seconds)
@@ -251,22 +279,21 @@ export class StacksService {
     
     while (Date.now() - startTime < maxWaitTime) {
       try {
-        // In a real implementation, we would call the Stacks API to get transaction status
-        // For now, we'll simulate this with a placeholder
-        console.log(`Monitoring transaction ${txId}...`);
+        // Check transaction status on Stacks blockchain
+        const txStatus = await this.getTransactionStatus(txId);
         
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, pollInterval));
-        
-        // In a real implementation, we would check the actual transaction status
-        // For now, we'll just return a mock response after a few iterations
-        if (Date.now() - startTime > pollInterval * 2) {
-          return {
-            tx_id: txId,
-            status: 'success',
-            confirmations: 1
-          };
+        // If transaction is successful, return the status
+        if (txStatus.status === 'success') {
+          return txStatus;
         }
+        
+        // If transaction failed, throw an error
+        if (txStatus.status === 'abort_by_response' || txStatus.status === 'abort_by_post_condition') {
+          throw new Error(`Transaction failed with status: ${txStatus.status}`);
+        }
+        
+        // Wait before polling again
+        await new Promise(resolve => setTimeout(resolve, pollInterval));
       } catch (error) {
         console.error('Error monitoring transaction:', error);
         throw error;

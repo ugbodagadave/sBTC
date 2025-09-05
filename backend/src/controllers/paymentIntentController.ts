@@ -241,25 +241,35 @@ export class PaymentIntentController {
         return;
       }
       
-      // In a real implementation, we would check the transaction status on the Stacks blockchain
-      // For now, we'll simulate this with a placeholder implementation
-      // TODO: Implement actual Stacks transaction status checking
+      // Check transaction status on Stacks blockchain
+      const txStatus = await StacksService.getTransactionStatus(txId);
       
-      // Simulate checking the transaction status
-      const isConfirmed = Math.random() > 0.5; // 50% chance of confirmation for demo
-      
-      if (isConfirmed) {
+      // Check if transaction is successful
+      if (txStatus.status === 'success') {
         // Update payment intent status to succeeded
         await PaymentIntentService.updateStatus(id, 'succeeded', txId);
         
         res.status(200).json({
           confirmed: true,
+          status: txStatus.status,
           message: 'Payment confirmed on Stacks blockchain'
         });
+      } else if (txStatus.status === 'abort_by_response' || txStatus.status === 'abort_by_post_condition') {
+        // Update payment intent status to failed
+        await PaymentIntentService.updateStatus(id, 'failed', txId);
+        
+        res.status(200).json({
+          confirmed: false,
+          failed: true,
+          status: txStatus.status,
+          message: 'Payment failed on Stacks blockchain'
+        });
       } else {
+        // Transaction is still pending
         res.status(200).json({
           confirmed: false,
           pending: true,
+          status: txStatus.status,
           message: 'Payment still pending on Stacks blockchain'
         });
       }
